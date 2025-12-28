@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DbConnection": "Server=.;Database=LearningPlatformDB;User=sa;Password=sasa@123;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
