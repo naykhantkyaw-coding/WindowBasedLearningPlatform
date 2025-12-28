@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panelSidebar = new Panel();
+            btn_signout = new Button();
             btn_dashboard = new Button();
             lbl_CodeLearn = new Label();
             panelHeader = new Panel();
@@ -42,6 +43,7 @@
             // panelSidebar
             // 
             panelSidebar.BackColor = Color.FromArgb(50, 50, 70);
+            panelSidebar.Controls.Add(btn_signout);
             panelSidebar.Controls.Add(btn_dashboard);
             panelSidebar.Controls.Add(lbl_CodeLearn);
             panelSidebar.Dock = DockStyle.Left;
@@ -49,6 +51,23 @@
             panelSidebar.Name = "panelSidebar";
             panelSidebar.Size = new Size(250, 681);
             panelSidebar.TabIndex = 0;
+            // 
+            // btn_signout
+            // 
+            btn_signout.Dock = DockStyle.Bottom;
+            btn_signout.FlatAppearance.BorderSize = 0;
+            btn_signout.FlatStyle = FlatStyle.Flat;
+            btn_signout.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_signout.ForeColor = Color.White;
+            btn_signout.Location = new Point(0, 631);
+            btn_signout.Name = "btn_signout";
+            btn_signout.Padding = new Padding(20, 0, 0, 0);
+            btn_signout.Size = new Size(250, 50);
+            btn_signout.TabIndex = 2;
+            btn_signout.Text = "Sign Out";
+            btn_signout.TextAlign = ContentAlignment.MiddleLeft;
+            btn_signout.UseVisualStyleBackColor = true;
+            btn_signout.Click += btn_signout_Click;
             // 
             // btn_dashboard
             // 
@@ -69,9 +88,10 @@
             // lbl_CodeLearn
             // 
             lbl_CodeLearn.AutoSize = true;
+            lbl_CodeLearn.BackColor = Color.Transparent;
             lbl_CodeLearn.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_CodeLearn.ForeColor = Color.White;
-            lbl_CodeLearn.Location = new Point(38, 589);
+            lbl_CodeLearn.Location = new Point(25, 557);
             lbl_CodeLearn.Name = "lbl_CodeLearn";
             lbl_CodeLearn.Padding = new Padding(20, 20, 0, 0);
             lbl_CodeLearn.Size = new Size(155, 52);
@@ -141,5 +161,6 @@
         private Button btn_dashboard;
         private ProgressBar progressBar1;
         private Panel panel1;
+        private Button btn_signout;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D; // Required for Gradient Brushes
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,37 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         {
             InitializeComponent();
 
+            // SETUP: Add Gradient to Sidebar
+            Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
+            if (sidebar is Panel p)
+            {
+                // Attach the paint event that draws the gradient
+                p.Paint += Sidebar_Paint;
+
+                // Ensure the gradient redraws when the window is resized
+                p.Resize += (s, e) => p.Invalidate();
+            }
+
             // STARTUP: Show Login Screen instead of Dashboard immediately
             ShowLogin();
+        }
+
+        // Custom Paint Method for the Sidebar Gradient
+        private void Sidebar_Paint(object? sender, PaintEventArgs e)
+        {
+            if (sender is Panel panel)
+            {
+                // Define your Gradient Colors
+                // Color 1: Top (Lighter Navy)
+                Color colorTop = ColorTranslator.FromHtml("#DB2777");
+                // Color 2: Bottom (Darker/Black Navy)
+                Color colorBottom = ColorTranslator.FromHtml("#9333EA");
+
+                using (LinearGradientBrush brush = new LinearGradientBrush(panel.ClientRectangle, colorTop, colorBottom, 90F))
+                {
+                    e.Graphics.FillRectangle(brush, panel.ClientRectangle);
+                }
+            }
         }
 
         private void ShowLogin()
@@ -98,6 +128,14 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
             // Once you create UC_Courses.cs, uncomment the line below:
             // ShowPage(new UC_Courses());
+        }
+        private void btn_signout_Click(object sender, EventArgs e)
+        {
+            // 1. Clear the current session
+            _currentStudentId = 0;
+
+            // 2. Return to the Login Screen (this method automatically hides the sidebar)
+            ShowLogin();
         }
     }
 }
