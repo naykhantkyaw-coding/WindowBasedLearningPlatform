@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WindowBasedLearningPlatform.WindowApp.Services
 {
-    public class Class1
+    public class ConfigurationService
     {
+        
     }
 }
