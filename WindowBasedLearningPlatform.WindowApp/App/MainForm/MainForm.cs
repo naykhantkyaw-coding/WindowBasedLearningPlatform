@@ -129,6 +129,13 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             // Once you create UC_Courses.cs, uncomment the line below:
             // ShowPage(new UC_Courses());
         }
+
+        private void btn_profile_Click(object sender, EventArgs e)
+        {
+            // Pass the current student ID so the profile knows who to load
+            ShowPage(new UC_Profile(_currentStudentId));
+        }
+
         private void btn_signout_Click(object sender, EventArgs e)
         {
             // 1. Clear the current session

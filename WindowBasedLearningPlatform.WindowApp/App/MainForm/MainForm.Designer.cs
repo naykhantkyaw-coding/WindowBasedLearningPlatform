@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panelSidebar = new Panel();
+            btn_profile = new Button();
             btn_signout = new Button();
             btn_dashboard = new Button();
             lbl_CodeLearn = new Label();
@@ -43,6 +44,7 @@
             // panelSidebar
             // 
             panelSidebar.BackColor = Color.FromArgb(50, 50, 70);
+            panelSidebar.Controls.Add(btn_profile);
             panelSidebar.Controls.Add(btn_signout);
             panelSidebar.Controls.Add(btn_dashboard);
             panelSidebar.Controls.Add(lbl_CodeLearn);
@@ -51,6 +53,23 @@
             panelSidebar.Name = "panelSidebar";
             panelSidebar.Size = new Size(250, 681);
             panelSidebar.TabIndex = 0;
+            // 
+            // btn_profile
+            // 
+            btn_profile.Dock = DockStyle.Top;
+            btn_profile.FlatAppearance.BorderSize = 0;
+            btn_profile.FlatStyle = FlatStyle.Flat;
+            btn_profile.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_profile.ForeColor = Color.White;
+            btn_profile.Location = new Point(0, 50);
+            btn_profile.Name = "btn_profile";
+            btn_profile.Padding = new Padding(20, 0, 0, 0);
+            btn_profile.Size = new Size(250, 50);
+            btn_profile.TabIndex = 3;
+            btn_profile.Text = "Profile";
+            btn_profile.TextAlign = ContentAlignment.MiddleLeft;
+            btn_profile.UseVisualStyleBackColor = true;
+            btn_profile.Click += btn_profile_Click;
             // 
             // btn_signout
             // 
@@ -84,6 +103,7 @@
             btn_dashboard.Text = "Dashboard";
             btn_dashboard.TextAlign = ContentAlignment.MiddleLeft;
             btn_dashboard.UseVisualStyleBackColor = true;
+            btn_dashboard.Click += btn_dashboard_Click;
             // 
             // lbl_CodeLearn
             // 
@@ -134,7 +154,7 @@
             panel1.Size = new Size(300, 150);
             panel1.TabIndex = 0;
             // 
-            // Form1
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -143,7 +163,7 @@
             Controls.Add(panelContent);
             Controls.Add(panelHeader);
             Controls.Add(panelSidebar);
-            Name = "Form1";
+            Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             panelSidebar.ResumeLayout(false);
@@ -162,5 +182,6 @@
         private ProgressBar progressBar1;
         private Panel panel1;
         private Button btn_signout;
+        private Button btn_profile;
     }
 }
