@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             loginPanel = new Panel();
+            label5 = new Label();
             panelButton = new WindowBasedLearningPlatform.WindowApp.App.UI_Elements.HorizentalGradientPanelHelper();
             btnLogin = new Button();
             label4 = new Label();
@@ -41,7 +42,6 @@
             label1 = new Label();
             iconPanel = new GradientPanel();
             iconLabel = new Label();
-            label5 = new Label();
             loginPanel.SuspendLayout();
             panelButton.SuspendLayout();
             panelPassword.SuspendLayout();
@@ -67,8 +67,21 @@
             loginPanel.Size = new Size(420, 480);
             loginPanel.TabIndex = 0;
             // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.ForeColor = SystemColors.ControlDarkDark;
+            label5.Location = new Point(132, 440);
+            label5.Name = "label5";
+            label5.Size = new Size(167, 20);
+            label5.TabIndex = 8;
+            label5.Text = "Group-4 Project © 2026";
+            // 
             // panelButton
             // 
+            panelButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelButton.ColorBottom = Color.FromArgb(147, 51, 234);
             panelButton.ColorTop = Color.FromArgb(219, 39, 119);
             panelButton.Controls.Add(btnLogin);
@@ -117,6 +130,7 @@
             // 
             // panelPassword
             // 
+            panelPassword.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelPassword.BackColor = Color.FromArgb(17, 24, 39);
             panelPassword.Controls.Add(txtPassword);
             panelPassword.Location = new Point(26, 312);
@@ -126,6 +140,7 @@
             // 
             // txtPassword
             // 
+            txtPassword.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtPassword.BorderStyle = BorderStyle.None;
             txtPassword.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtPassword.ForeColor = Color.White;
@@ -136,6 +151,7 @@
             // 
             // panelUserName
             // 
+            panelUserName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelUserName.BackColor = Color.FromArgb(17, 24, 39);
             panelUserName.Controls.Add(txtUserName);
             panelUserName.Location = new Point(26, 226);
@@ -145,6 +161,7 @@
             // 
             // txtUserName
             // 
+            txtUserName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtUserName.BorderStyle = BorderStyle.None;
             txtUserName.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
             txtUserName.ForeColor = Color.White;
@@ -171,11 +188,11 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(110, 124);
+            label1.Location = new Point(134, 124);
             label1.Name = "label1";
-            label1.Size = new Size(201, 38);
+            label1.Size = new Size(156, 38);
             label1.TabIndex = 2;
-            label1.Text = "Student Login";
+            label1.Text = "User Login";
             // 
             // iconPanel
             // 
@@ -199,18 +216,6 @@
             iconLabel.Size = new Size(67, 46);
             iconLabel.TabIndex = 2;
             iconLabel.Text = "🎓";
-            // 
-            // label5
-            // 
-            label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.ForeColor = SystemColors.ControlDarkDark;
-            label5.Location = new Point(132, 440);
-            label5.Name = "label5";
-            label5.Size = new Size(167, 20);
-            label5.TabIndex = 8;
-            label5.Text = "Group-4 Project © 2026";
             // 
             // LoginUserControl
             // 
