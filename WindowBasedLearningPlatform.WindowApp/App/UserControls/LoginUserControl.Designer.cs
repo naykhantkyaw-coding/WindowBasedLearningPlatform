@@ -53,12 +53,14 @@
             iconPanel.Name = "iconPanel";
             iconPanel.Size = new Size(80, 80);
             iconPanel.TabIndex = 0;
+            iconPanel.Paint += iconPanel_Paint;
             // 
             // iconLabel
             // 
             iconLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             iconLabel.AutoSize = true;
             iconLabel.Font = new Font("Segoe UI", 32F);
+            iconLabel.ForeColor = Color.White;
             iconLabel.Location = new Point(-10, 1);
             iconLabel.Name = "iconLabel";
             iconLabel.Size = new Size(104, 72);

@@ -23,5 +23,19 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             FormDesignService.RoundPanel(iconPanel, 80);
         }
 
+        private void iconPanel_Paint(object sender, PaintEventArgs e)
+        {
+            Color startColor = ColorTranslator.FromHtml("#DB2777");
+            Color endColor = ColorTranslator.FromHtml("#9333EA");
+
+            using (LinearGradientBrush brush = new LinearGradientBrush(
+                iconPanel.ClientRectangle,
+                startColor,
+                endColor,
+                LinearGradientMode.Vertical)) // Vertical gradient
+            {
+                e.Graphics.FillRectangle(brush, iconPanel.ClientRectangle);
+            }
+        }
     }
 }
