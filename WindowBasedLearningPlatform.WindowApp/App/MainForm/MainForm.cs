@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WindowBasedLearningPlatform.WindowApp.App; // For UserControls
+using WindowBasedLearningPlatform.WindowApp.App.UserControls;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
@@ -37,10 +37,11 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         {
             Control? contentPanel = this.Controls.Find("panelContent", true).FirstOrDefault();
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
+            Control? headerPanal = this.Controls.Find("panelHeader", true).FirstOrDefault();
 
             // Hide sidebar during login
             if (sidebar != null) sidebar.Visible = false;
-
+            if(headerPanal != null) headerPanal.Visible = false;
             if (contentPanel != null)
             {
                 contentPanel.Controls.Clear();
