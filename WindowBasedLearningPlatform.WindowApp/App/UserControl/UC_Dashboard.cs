@@ -12,6 +12,9 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 {
     public partial class UC_Dashboard : UserControl
     {
+        public event EventHandler RequestOpenCourses;
+        public event EventHandler RequestOpenProfile;
+
         public UC_Dashboard()
         {
             InitializeComponent();
@@ -51,6 +54,10 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             AddStatCard(panelStats, "Quiz Average", "85%", Color.FromArgb(255, 183, 77));  // Orange
             AddStatCard(panelStats, "Total Hours", "5.2h", Color.FromArgb(186, 104, 200)); // Purple
 
+            // 5. NEW: Quick Action Buttons (Resume / Profile)
+            // We call this helper method to add the buttons below the stats
+            AddQuickActions();
+
             // 5. Recent Activity Section
             Label lblRecent = new Label();
             lblRecent.Text = "Recent Activity";
@@ -60,6 +67,49 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             lblRecent.Padding = new Padding(0, 30, 0, 10); // Spacing above
             this.Controls.Add(lblRecent);
             lblRecent.BringToFront();
+        }
+
+        // --- NEW HELPER METHOD FOR BUTTONS ---
+        private void AddQuickActions()
+        {
+            // Container for the buttons
+            FlowLayoutPanel panelActions = new FlowLayoutPanel();
+            panelActions.Dock = DockStyle.Top;
+            panelActions.Height = 80;
+            panelActions.Padding = new Padding(0, 20, 0, 0); // Spacing from top
+            panelActions.FlowDirection = FlowDirection.LeftToRight;
+
+            // Add to main control
+            this.Controls.Add(panelActions);
+            panelActions.BringToFront(); // Ensure correct order
+
+            // Create "Resume Learning" Button (Yellow)
+            Button btnResume = CreateActionButton("Resume Learning", ColorTranslator.FromHtml("#fdd23f"));
+            btnResume.ForeColor = Color.Black;
+            // Fire event when clicked
+            btnResume.Click += (s, e) => RequestOpenCourses?.Invoke(this, EventArgs.Empty);
+            panelActions.Controls.Add(btnResume);
+
+            // Create "View Profile" Button (White)
+            Button btnProfile = CreateActionButton("View Profile", Color.White);
+            btnProfile.ForeColor = Color.Black;
+            // Fire event when clicked
+            btnProfile.Click += (s, e) => RequestOpenProfile?.Invoke(this, EventArgs.Empty);
+            panelActions.Controls.Add(btnProfile);
+        }
+
+        private Button CreateActionButton(string text, Color bgColor)
+        {
+            Button btn = new Button();
+            btn.Text = text;
+            btn.BackColor = bgColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btn.Size = new Size(160, 45);
+            btn.Margin = new Padding(0, 0, 20, 0); // Spacing between buttons
+            btn.Cursor = Cursors.Hand;
+            return btn;
         }
 
         // Helper Method to create beautiful cards
