@@ -28,84 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panelSidebar = new Panel();
+            panelContent = new Panel();
+            panelSidebar = new GradientPanel();
+            lbl_CodeLearn = new Label();
+            btn_Courses = new Button();
             btn_profile = new Button();
             btn_signout = new Button();
             btn_dashboard = new Button();
-            lbl_CodeLearn = new Label();
-            panelHeader = new Panel();
-            panelContent = new Panel();
             progressBar1 = new ProgressBar();
             panel1 = new Panel();
-            btn_Courses = new Button();
-            panelSidebar.SuspendLayout();
             panelContent.SuspendLayout();
+            panelSidebar.SuspendLayout();
             SuspendLayout();
+            // 
+            // panelContent
+            // 
+            panelContent.Controls.Add(panelSidebar);
+            panelContent.Controls.Add(progressBar1);
+            panelContent.Controls.Add(panel1);
+            panelContent.Dock = DockStyle.Fill;
+            panelContent.Location = new Point(0, 0);
+            panelContent.Name = "panelContent";
+            panelContent.Size = new Size(1184, 681);
+            panelContent.TabIndex = 2;
             // 
             // panelSidebar
             // 
-            panelSidebar.BackColor = Color.FromArgb(50, 50, 70);
+            panelSidebar.ColorBottom = Color.FromArgb(20, 20, 35);
+            panelSidebar.ColorTop = Color.FromArgb(50, 50, 70);
+            panelSidebar.Controls.Add(lbl_CodeLearn);
             panelSidebar.Controls.Add(btn_Courses);
             panelSidebar.Controls.Add(btn_profile);
             panelSidebar.Controls.Add(btn_signout);
             panelSidebar.Controls.Add(btn_dashboard);
-            panelSidebar.Controls.Add(lbl_CodeLearn);
             panelSidebar.Dock = DockStyle.Left;
             panelSidebar.Location = new Point(0, 0);
             panelSidebar.Name = "panelSidebar";
-            panelSidebar.Size = new Size(250, 681);
-            panelSidebar.TabIndex = 0;
-            // 
-            // btn_profile
-            // 
-            btn_profile.Dock = DockStyle.Top;
-            btn_profile.FlatAppearance.BorderSize = 0;
-            btn_profile.FlatStyle = FlatStyle.Flat;
-            btn_profile.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btn_profile.ForeColor = Color.White;
-            btn_profile.Location = new Point(0, 50);
-            btn_profile.Name = "btn_profile";
-            btn_profile.Padding = new Padding(20, 0, 0, 0);
-            btn_profile.Size = new Size(250, 50);
-            btn_profile.TabIndex = 3;
-            btn_profile.Text = "Profile";
-            btn_profile.TextAlign = ContentAlignment.MiddleLeft;
-            btn_profile.UseVisualStyleBackColor = true;
-            btn_profile.Click += btn_profile_Click;
-            // 
-            // btn_signout
-            // 
-            btn_signout.Dock = DockStyle.Bottom;
-            btn_signout.FlatAppearance.BorderSize = 0;
-            btn_signout.FlatStyle = FlatStyle.Flat;
-            btn_signout.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btn_signout.ForeColor = Color.White;
-            btn_signout.Location = new Point(0, 631);
-            btn_signout.Name = "btn_signout";
-            btn_signout.Padding = new Padding(20, 0, 0, 0);
-            btn_signout.Size = new Size(250, 50);
-            btn_signout.TabIndex = 2;
-            btn_signout.Text = "Sign Out";
-            btn_signout.TextAlign = ContentAlignment.MiddleLeft;
-            btn_signout.UseVisualStyleBackColor = true;
-            btn_signout.Click += btn_signout_Click;
-            // 
-            // btn_dashboard
-            // 
-            btn_dashboard.Dock = DockStyle.Top;
-            btn_dashboard.FlatAppearance.BorderSize = 0;
-            btn_dashboard.FlatStyle = FlatStyle.Flat;
-            btn_dashboard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btn_dashboard.ForeColor = Color.White;
-            btn_dashboard.Location = new Point(0, 0);
-            btn_dashboard.Name = "btn_dashboard";
-            btn_dashboard.Padding = new Padding(20, 0, 0, 0);
-            btn_dashboard.Size = new Size(250, 50);
-            btn_dashboard.TabIndex = 1;
-            btn_dashboard.Text = "Dashboard";
-            btn_dashboard.TextAlign = ContentAlignment.MiddleLeft;
-            btn_dashboard.UseVisualStyleBackColor = true;
-            btn_dashboard.Click += btn_dashboard_Click;
+            panelSidebar.Size = new Size(299, 681);
+            panelSidebar.TabIndex = 5;
             // 
             // lbl_CodeLearn
             // 
@@ -113,48 +73,12 @@
             lbl_CodeLearn.BackColor = Color.Transparent;
             lbl_CodeLearn.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_CodeLearn.ForeColor = Color.White;
-            lbl_CodeLearn.Location = new Point(25, 557);
+            lbl_CodeLearn.Location = new Point(53, 210);
             lbl_CodeLearn.Name = "lbl_CodeLearn";
             lbl_CodeLearn.Padding = new Padding(20, 20, 0, 0);
             lbl_CodeLearn.Size = new Size(155, 52);
-            lbl_CodeLearn.TabIndex = 0;
+            lbl_CodeLearn.TabIndex = 9;
             lbl_CodeLearn.Text = "CodeLearn";
-            // 
-            // panelHeader
-            // 
-            panelHeader.BackColor = Color.White;
-            panelHeader.Dock = DockStyle.Top;
-            panelHeader.Location = new Point(250, 0);
-            panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(934, 60);
-            panelHeader.TabIndex = 1;
-            // 
-            // panelContent
-            // 
-            panelContent.Controls.Add(progressBar1);
-            panelContent.Controls.Add(panel1);
-            panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(250, 60);
-            panelContent.Name = "panelContent";
-            panelContent.Size = new Size(934, 621);
-            panelContent.TabIndex = 2;
-            // 
-            // progressBar1
-            // 
-            progressBar1.Location = new Point(556, 35);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(100, 23);
-            progressBar1.Style = ProgressBarStyle.Continuous;
-            progressBar1.TabIndex = 1;
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.White;
-            panel1.Location = new Point(89, 89);
-            panel1.Name = "panel1";
-            panel1.Padding = new Padding(20);
-            panel1.Size = new Size(300, 150);
-            panel1.TabIndex = 0;
             // 
             // btn_Courses
             // 
@@ -166,12 +90,76 @@
             btn_Courses.Location = new Point(0, 100);
             btn_Courses.Name = "btn_Courses";
             btn_Courses.Padding = new Padding(20, 0, 0, 0);
-            btn_Courses.Size = new Size(250, 50);
-            btn_Courses.TabIndex = 4;
+            btn_Courses.Size = new Size(299, 50);
+            btn_Courses.TabIndex = 8;
             btn_Courses.Text = "Courses";
             btn_Courses.TextAlign = ContentAlignment.MiddleLeft;
             btn_Courses.UseVisualStyleBackColor = true;
-            btn_Courses.Click += btn_courses_Click;
+            // 
+            // btn_profile
+            // 
+            btn_profile.Dock = DockStyle.Top;
+            btn_profile.FlatAppearance.BorderSize = 0;
+            btn_profile.FlatStyle = FlatStyle.Flat;
+            btn_profile.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_profile.ForeColor = Color.White;
+            btn_profile.Location = new Point(0, 50);
+            btn_profile.Name = "btn_profile";
+            btn_profile.Padding = new Padding(20, 0, 0, 0);
+            btn_profile.Size = new Size(299, 50);
+            btn_profile.TabIndex = 7;
+            btn_profile.Text = "Profile";
+            btn_profile.TextAlign = ContentAlignment.MiddleLeft;
+            btn_profile.UseVisualStyleBackColor = true;
+            // 
+            // btn_signout
+            // 
+            btn_signout.Dock = DockStyle.Bottom;
+            btn_signout.FlatAppearance.BorderSize = 0;
+            btn_signout.FlatStyle = FlatStyle.Flat;
+            btn_signout.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_signout.ForeColor = Color.White;
+            btn_signout.Location = new Point(0, 631);
+            btn_signout.Name = "btn_signout";
+            btn_signout.Padding = new Padding(20, 0, 0, 0);
+            btn_signout.Size = new Size(299, 50);
+            btn_signout.TabIndex = 6;
+            btn_signout.Text = "Sign Out";
+            btn_signout.TextAlign = ContentAlignment.MiddleLeft;
+            btn_signout.UseVisualStyleBackColor = true;
+            // 
+            // btn_dashboard
+            // 
+            btn_dashboard.Dock = DockStyle.Top;
+            btn_dashboard.FlatAppearance.BorderSize = 0;
+            btn_dashboard.FlatStyle = FlatStyle.Flat;
+            btn_dashboard.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_dashboard.ForeColor = Color.White;
+            btn_dashboard.Location = new Point(0, 0);
+            btn_dashboard.Name = "btn_dashboard";
+            btn_dashboard.Padding = new Padding(20, 0, 0, 0);
+            btn_dashboard.Size = new Size(299, 50);
+            btn_dashboard.TabIndex = 5;
+            btn_dashboard.Text = "Dashboard";
+            btn_dashboard.TextAlign = ContentAlignment.MiddleLeft;
+            btn_dashboard.UseVisualStyleBackColor = true;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(853, 197);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(100, 23);
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.White;
+            panel1.Location = new Point(413, 136);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(20);
+            panel1.Size = new Size(300, 150);
+            panel1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -180,28 +168,25 @@
             BackColor = Color.LightGray;
             ClientSize = new Size(1184, 681);
             Controls.Add(panelContent);
-            Controls.Add(panelHeader);
-            Controls.Add(panelSidebar);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Learning Platform";
+            panelContent.ResumeLayout(false);
             panelSidebar.ResumeLayout(false);
             panelSidebar.PerformLayout();
-            panelContent.ResumeLayout(false);
             ResumeLayout(false);
+
         }
 
         #endregion
-
-        private Panel panelSidebar;
+        private System.Windows.Forms.Panel panelContent;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Panel panel1;
+        private GradientPanel panelSidebar;
         private Label lbl_CodeLearn;
-        private Panel panelHeader;
-        private Panel panelContent;
-        private Button btn_dashboard;
-        private ProgressBar progressBar1;
-        private Panel panel1;
-        private Button btn_signout;
-        private Button btn_profile;
         private Button btn_Courses;
+        private Button btn_profile;
+        private Button btn_signout;
+        private Button btn_dashboard;
     }
 }
