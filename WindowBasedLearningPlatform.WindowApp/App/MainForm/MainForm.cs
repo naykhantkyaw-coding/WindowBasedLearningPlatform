@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         // Store the logged-in user ID so we can track who is using the app
         private int _currentStudentId;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
