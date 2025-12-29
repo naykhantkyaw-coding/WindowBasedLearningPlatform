@@ -37,6 +37,7 @@
             panelContent = new Panel();
             progressBar1 = new ProgressBar();
             panel1 = new Panel();
+            btn_Courses = new Button();
             panelSidebar.SuspendLayout();
             panelContent.SuspendLayout();
             SuspendLayout();
@@ -44,6 +45,7 @@
             // panelSidebar
             // 
             panelSidebar.BackColor = Color.FromArgb(50, 50, 70);
+            panelSidebar.Controls.Add(btn_Courses);
             panelSidebar.Controls.Add(btn_profile);
             panelSidebar.Controls.Add(btn_signout);
             panelSidebar.Controls.Add(btn_dashboard);
@@ -154,6 +156,23 @@
             panel1.Size = new Size(300, 150);
             panel1.TabIndex = 0;
             // 
+            // btn_Courses
+            // 
+            btn_Courses.Dock = DockStyle.Top;
+            btn_Courses.FlatAppearance.BorderSize = 0;
+            btn_Courses.FlatStyle = FlatStyle.Flat;
+            btn_Courses.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_Courses.ForeColor = Color.White;
+            btn_Courses.Location = new Point(0, 100);
+            btn_Courses.Name = "btn_Courses";
+            btn_Courses.Padding = new Padding(20, 0, 0, 0);
+            btn_Courses.Size = new Size(250, 50);
+            btn_Courses.TabIndex = 4;
+            btn_Courses.Text = "Courses";
+            btn_Courses.TextAlign = ContentAlignment.MiddleLeft;
+            btn_Courses.UseVisualStyleBackColor = true;
+            btn_Courses.Click += btn_courses_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -183,5 +202,6 @@
         private Panel panel1;
         private Button btn_signout;
         private Button btn_profile;
+        private Button btn_Courses;
     }
 }

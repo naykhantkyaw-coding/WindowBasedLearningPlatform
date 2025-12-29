@@ -81,7 +81,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             dashboard.RequestOpenProfile += (s, e) => ShowPage(new UC_Profile(_currentStudentId));
 
             // 2. Connect "Resume Learning" button to the Courses logic
-            // FIX: Explicitly call the method with correct arguments
             dashboard.RequestOpenCourses += (s, e) => btn_courses_Click(s, e);
 
             ShowPage(dashboard);
@@ -108,8 +107,17 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
         private void btn_courses_Click(object? sender, EventArgs e) // Made sender nullable to be safe
         {
-            MessageBox.Show("Courses Page coming soon!");
-            // ShowPage(new UC_Courses());
+            // 1. Create the Courses Page
+            UC_Courses coursesPage = new UC_Courses();
+
+            // 2. Listen for selection (Placeholder logic for now)
+            coursesPage.CourseSelected += (s, languageName) =>
+            {
+                MessageBox.Show($"Starting {languageName} lessons... (Lesson Viewer coming next!)");
+            };
+
+            // 3. Show the page
+            ShowPage(coursesPage);
         }
 
         private void btn_profile_Click(object sender, EventArgs e)
