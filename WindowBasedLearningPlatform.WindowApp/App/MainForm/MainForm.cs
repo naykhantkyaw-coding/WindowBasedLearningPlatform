@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowBasedLearningPlatform.WindowApp.App.UserControls;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
@@ -30,7 +31,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App
                 // Ensure the gradient redraws when the window is resized
                 p.Resize += (s, e) => p.Invalidate();
             }
-
             // STARTUP: Show Login Screen instead of Dashboard immediately
             ShowLogin();
         }
@@ -55,24 +55,18 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
         private void ShowLogin()
         {
-            // 1. Find the necessary panels safely
             Control? contentPanel = this.Controls.Find("panelContent", true).FirstOrDefault();
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
+            Control? headerPanal = this.Controls.Find("panelHeader", true).FirstOrDefault();
 
-            // 2. Hide the sidebar while logging in (Cleaner look for login screen)
             if (sidebar != null) sidebar.Visible = false;
-
+            if(headerPanal != null) headerPanal.Visible = false;
             if (contentPanel != null)
             {
                 contentPanel.Controls.Clear();
-
-                // Create the Login Page instance
-                UC_Login loginPage = new UC_Login();
-
-                // 3. THE CRITICAL STEP: Subscribe to the "Success" event
-                // This connects the "Sign In" button click in UC_Login to the logic here
-                loginPage.LoginSuccess += OnLoginSuccess;
-
+               // UC_Login loginPage = new UC_Login();
+                LoginUserControl loginPage = new LoginUserControl();
+                //loginPage.LoginSuccess += OnLoginSuccess;
                 loginPage.Dock = DockStyle.Fill;
                 contentPanel.Controls.Add(loginPage);
             }
