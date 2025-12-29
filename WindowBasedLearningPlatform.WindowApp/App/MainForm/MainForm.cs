@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.App.UserControls;
 
@@ -14,37 +8,30 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 {
     public partial class MainForm : Form
     {
-        // Store the logged-in user ID so we can track who is using the app
         private int _currentStudentId;
 
         public MainForm()
         {
             InitializeComponent();
 
-            // Sidebar Gradient Logic
+            // --- FIX FOR GRADIENT SIDEBAR ---
+            // 1. Enable double buffering to prevent flicker
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+
+            // 2. Find the sidebar (It might be null if not initialized yet, but InitComponent handles it)
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
-            if (sidebar is Panel p)
+
+            // 3. Force a repaint if it exists
+            if (sidebar != null)
             {
-                p.Paint += Sidebar_Paint;
-                p.Resize += (s, e) => p.Invalidate();
+                sidebar.Invalidate();
             }
 
+            // Start at Login Screen
             ShowLogin();
         }
 
-        private void Sidebar_Paint(object? sender, PaintEventArgs e)
-        {
-            if (sender is Panel panel)
-            {
-                Color colorTop = ColorTranslator.FromHtml("#323246");
-                Color colorBottom = ColorTranslator.FromHtml("#141423");
-
-                using (LinearGradientBrush brush = new LinearGradientBrush(panel.ClientRectangle, colorTop, colorBottom, 90F))
-                {
-                    e.Graphics.FillRectangle(brush, panel.ClientRectangle);
-                }
-            }
-        }
+        // --- NAVIGATION HELPERS ---
 
         private void ShowLogin()
         {
@@ -52,6 +39,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
             Control? headerPanal = this.Controls.Find("panelHeader", true).FirstOrDefault();
 
+            // Hide sidebar during login
             if (sidebar != null) sidebar.Visible = false;
             if(headerPanal != null) headerPanal.Visible = false;
             if (contentPanel != null)
@@ -70,22 +58,14 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             _currentStudentId = studentId;
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
             if (sidebar != null) sidebar.Visible = true;
-
-            // Load Dashboard using the new helper method to ensure buttons work
             ShowDashboard();
         }
 
-        // --- NEW HELPER: Creates Dashboard and Connects Events ---
         private void ShowDashboard()
         {
             UC_Dashboard dashboard = new UC_Dashboard();
-
-            // 1. Connect "View Profile" button to the Profile Page
             dashboard.RequestOpenProfile += (s, e) => ShowPage(new UC_Profile(_currentStudentId));
-
-            // 2. Connect "Resume Learning" button to the Courses logic
             dashboard.RequestOpenCourses += (s, e) => btn_courses_Click(s, e);
-
             ShowPage(dashboard);
         }
 
@@ -101,25 +81,20 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             }
         }
 
-        // --- Event Handlers ---
+        // --- BUTTON EVENT HANDLERS ---
 
         private void btn_dashboard_Click(object sender, EventArgs e)
         {
-            ShowDashboard(); // Use the helper here too!
+            ShowDashboard();
         }
 
-        private void btn_courses_Click(object? sender, EventArgs e) // Made sender nullable to be safe
+        private void btn_courses_Click(object? sender, EventArgs e)
         {
-            // 1. Create the Courses Page
             UC_Courses coursesPage = new UC_Courses();
-
-            // 2. Listen for selection (Placeholder logic for now)
             coursesPage.CourseSelected += (s, languageName) =>
             {
-                MessageBox.Show($"Starting {languageName} lessons... (Lesson Viewer coming next!)");
+                MessageBox.Show($"Starting {languageName} lessons...");
             };
-
-            // 3. Show the page
             ShowPage(coursesPage);
         }
 
