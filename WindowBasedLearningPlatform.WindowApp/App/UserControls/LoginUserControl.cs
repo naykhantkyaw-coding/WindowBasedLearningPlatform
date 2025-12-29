@@ -20,22 +20,22 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             this.BackColor = Color.FromArgb(15, 23, 42);
             FormDesignService.CenterForm(loginPanel, this);
             FormDesignService.RoundPanel(loginPanel, 20);
+            FormDesignService.RoundPanel(panelUserName, 5);
+            FormDesignService.RoundPanel(panelPassword, 5);
+            FormDesignService.RoundPanel(panelButton, 5);
             FormDesignService.RoundPanel(iconPanel, 80);
-        }
 
-        private void iconPanel_Paint(object sender, PaintEventArgs e)
-        {
-            Color startColor = ColorTranslator.FromHtml("#DB2777");
-            Color endColor = ColorTranslator.FromHtml("#9333EA");
+            iconLabel.Parent = iconPanel;
+            iconLabel.BackColor = Color.Transparent;
 
-            using (LinearGradientBrush brush = new LinearGradientBrush(
-                iconPanel.ClientRectangle,
-                startColor,
-                endColor,
-                LinearGradientMode.Vertical)) // Vertical gradient
-            {
-                e.Graphics.FillRectangle(brush, iconPanel.ClientRectangle);
-            }
+
+            txtUserName.BackColor = panelUserName.BackColor;
+            txtPassword.BackColor = panelPassword.BackColor;
+            btnLogin.BackColor = Color.Transparent;
+            btnLogin.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnLogin.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+
         }
     }
 }
