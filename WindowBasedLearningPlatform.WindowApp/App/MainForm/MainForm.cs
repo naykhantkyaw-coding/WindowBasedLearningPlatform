@@ -42,12 +42,12 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             // Hide sidebar during login
             if (sidebar != null) sidebar.Visible = false;
             if(headerPanal != null) headerPanal.Visible = false;
+
             if (contentPanel != null)
             {
                 contentPanel.Controls.Clear();
-                UC_Login loginPage = new UC_Login();
-                // LoginUserControl loginPage = new LoginUserControl();
-                loginPage.LoginSuccess += OnLoginSuccess;
+                LoginUserControl loginPage = new LoginUserControl();
+               // loginPage.LoginSuccess += OnLoginSuccess;
                 loginPage.Dock = DockStyle.Fill;
                 contentPanel.Controls.Add(loginPage);
             }

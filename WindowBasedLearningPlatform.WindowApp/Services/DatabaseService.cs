@@ -52,7 +52,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             connection.Close();
             string json = JsonConvert.SerializeObject(dt);
             List<T>? data = JsonConvert.DeserializeObject<List<T>>(json);
-            return data[0];
+            return data.FirstOrDefault();
         }
 
         // for insert,update,delete

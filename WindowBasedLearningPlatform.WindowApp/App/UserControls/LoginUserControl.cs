@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowBasedLearningPlatform.WindowApp.Features.Login;
+using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 using WindowBasedLearningPlatform.WindowApp.Services;
 
 namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
@@ -34,8 +36,15 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             btnLogin.BackColor = Color.Transparent;
             btnLogin.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btnLogin.FlatAppearance.MouseDownBackColor = Color.Transparent;
+        }
 
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            UserRequestModel reqModel = new UserRequestModel();
+            reqModel.UserName = txtUserName.Text;
+            reqModel.Password = txtPassword.Text;
 
+            var result = UserLogin.CheckUserExist(reqModel);
         }
     }
 }

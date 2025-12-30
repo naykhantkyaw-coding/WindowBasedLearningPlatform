@@ -21,7 +21,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
                     string json = File.ReadAllText(jsonPath);
                     obj = JObject.Parse(json);
 
-                    connectionString = obj["ConnectionStrings"]["DefaultConnection"].ToString();
+                    connectionString = obj["ConnectionStrings"]["DbConnection"].ToString();
                 }
             }
             catch (Exception ex)
