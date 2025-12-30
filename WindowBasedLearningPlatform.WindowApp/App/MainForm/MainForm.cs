@@ -45,9 +45,9 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             if (contentPanel != null)
             {
                 contentPanel.Controls.Clear();
-                //UC_Login loginPage = new UC_Login();
-                LoginUserControl loginPage = new LoginUserControl();
-               // loginPage.LoginSuccess += OnLoginSuccess;
+                UC_Login loginPage = new UC_Login();
+                // LoginUserControl loginPage = new LoginUserControl();
+                loginPage.LoginSuccess += OnLoginSuccess;
                 loginPage.Dock = DockStyle.Fill;
                 contentPanel.Controls.Add(loginPage);
             }
