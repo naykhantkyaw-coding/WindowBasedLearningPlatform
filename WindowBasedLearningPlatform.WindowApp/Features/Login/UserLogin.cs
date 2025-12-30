@@ -34,7 +34,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Login
                 if (userResult.LoginPassword != reqModel.Password)
                 {
                     model.IsSuccess = false;
-                    model.Message = "Wrong Password!";
+                    model.Message = "User Name or Password is wrong!";
                     return model;
                 }
 

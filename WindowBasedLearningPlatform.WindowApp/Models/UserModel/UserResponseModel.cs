@@ -12,5 +12,6 @@ namespace WindowBasedLearningPlatform.WindowApp.Models.UserModel
         public int UserId { get; set; }
         public string UserName { get; set; }
         public string LoginPassword { get; set; }
+        public DateTime CreatedDateTime { get; set; }
     }
 }

@@ -3,17 +3,18 @@ using System.Drawing;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.Services;
 using WindowBasedLearningPlatform.WindowApp.Models;
+using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
     public partial class UC_Profile : UserControl
     {
-        private int _studentId;
+        private UserResponseModel userModel;
 
-        public UC_Profile(int studentId)
+        public UC_Profile(UserResponseModel model)
         {
             InitializeComponent(); // This calls the method in the Designer.cs file
-            _studentId = studentId;
+            userModel = model;
             SetupProfileUI();
             LoadProfileData();
         }
@@ -107,19 +108,14 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         private void LoadProfileData()
         {
             // MOCK DATA for now
-            string mockName = "John Doe";
-            string mockUser = "admin";
-            string mockEmail = "student@example.com";
-            string mockDate = DateTime.Now.AddMonths(-3).ToShortDateString();
+            string mockName = userModel.UserName;
+            string mockDate = userModel.CreatedDateTime.ToShortDateString();
 
             Control[] cName = this.Controls.Find("lblName", true);
             if (cName.Length > 0) cName[0].Text = mockName;
 
             Control[] cUser = this.Controls.Find("lblUsername", true);
-            if (cUser.Length > 0) cUser[0].Text = mockUser;
-
-            Control[] cEmail = this.Controls.Find("lblEmail", true);
-            if (cEmail.Length > 0) cEmail[0].Text = mockEmail;
+            if (cUser.Length > 0) cUser[0].Text = mockName;
 
             Control[] cDate = this.Controls.Find("lblDate", true);
             if (cDate.Length > 0) cDate[0].Text = mockDate;

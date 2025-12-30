@@ -3,12 +3,13 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.App.UserControls;
+using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
     public partial class MainForm : Form
     {
-        private int _currentStudentId;
+        private UserResponseModel userModel;
 
         public MainForm()
         {
@@ -41,21 +42,21 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
             // Hide sidebar during login
             if (sidebar != null) sidebar.Visible = false;
-            if(headerPanal != null) headerPanal.Visible = false;
+            if (headerPanal != null) headerPanal.Visible = false;
 
             if (contentPanel != null)
             {
                 contentPanel.Controls.Clear();
                 LoginUserControl loginPage = new LoginUserControl();
-               // loginPage.LoginSuccess += OnLoginSuccess;
+                loginPage.LoginSuccess += OnLoginSuccess;
                 loginPage.Dock = DockStyle.Fill;
                 contentPanel.Controls.Add(loginPage);
             }
         }
 
-        private void OnLoginSuccess(object? sender, int studentId)
+        private void OnLoginSuccess(object? sender, UserResponseModel model)
         {
-            _currentStudentId = studentId;
+            userModel = model;
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
             if (sidebar != null) sidebar.Visible = true;
             ShowDashboard();
@@ -64,7 +65,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         private void ShowDashboard()
         {
             UC_Dashboard dashboard = new UC_Dashboard();
-            dashboard.RequestOpenProfile += (s, e) => ShowPage(new UC_Profile(_currentStudentId));
+            dashboard.RequestOpenProfile += (s, e) => ShowPage(new UC_Profile(userModel));
             dashboard.RequestOpenCourses += (s, e) => btn_courses_Click(s, e);
             ShowPage(dashboard);
         }
@@ -100,12 +101,12 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
         private void btn_profile_Click(object sender, EventArgs e)
         {
-            ShowPage(new UC_Profile(_currentStudentId));
+            ShowPage(new UC_Profile(userModel));
         }
 
         private void btn_signout_Click(object sender, EventArgs e)
         {
-            _currentStudentId = 0;
+            userModel.UserId = 0;
             ShowLogin();
         }
     }

@@ -16,6 +16,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 {
     public partial class LoginUserControl : UserControl
     {
+        public event EventHandler<UserResponseModel> LoginSuccess;
         public LoginUserControl()
         {
             InitializeComponent();
@@ -45,6 +46,15 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             reqModel.Password = txtPassword.Text;
 
             var result = UserLogin.CheckUserExist(reqModel);
+            if (!result.IsSuccess)
+            {
+                lblMessage.Text = result.Message;
+            }
+
+            if (result.UserId != 0)
+            {
+                LoginSuccess?.Invoke(this, result);
+            }
         }
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             loginPanel = new Panel();
+            lblMessage = new Label();
             label5 = new Label();
             panelButton = new WindowBasedLearningPlatform.WindowApp.App.UI_Elements.HorizentalGradientPanelHelper();
             btnLogin = new Button();
@@ -53,6 +54,7 @@
             // 
             loginPanel.Anchor = AnchorStyles.None;
             loginPanel.BackColor = Color.FromArgb(31, 41, 55);
+            loginPanel.Controls.Add(lblMessage);
             loginPanel.Controls.Add(label5);
             loginPanel.Controls.Add(panelButton);
             loginPanel.Controls.Add(label4);
@@ -67,13 +69,25 @@
             loginPanel.Size = new Size(420, 480);
             loginPanel.TabIndex = 0;
             // 
+            // lblMessage
+            // 
+            lblMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lblMessage.AutoSize = true;
+            lblMessage.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblMessage.ForeColor = Color.Red;
+            lblMessage.ImageAlign = ContentAlignment.BottomLeft;
+            lblMessage.Location = new Point(29, 346);
+            lblMessage.Name = "lblMessage";
+            lblMessage.Size = new Size(0, 23);
+            lblMessage.TabIndex = 9;
+            // 
             // label5
             // 
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label5.ForeColor = SystemColors.ControlDarkDark;
-            label5.Location = new Point(132, 440);
+            label5.Location = new Point(132, 441);
             label5.Name = "label5";
             label5.Size = new Size(167, 20);
             label5.TabIndex = 8;
@@ -85,7 +99,7 @@
             panelButton.ColorBottom = Color.FromArgb(147, 51, 234);
             panelButton.ColorTop = Color.FromArgb(219, 39, 119);
             panelButton.Controls.Add(btnLogin);
-            panelButton.Location = new Point(29, 379);
+            panelButton.Location = new Point(29, 380);
             panelButton.Name = "panelButton";
             panelButton.Size = new Size(368, 44);
             panelButton.TabIndex = 1;
@@ -111,7 +125,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(29, 286);
+            label4.Location = new Point(29, 270);
             label4.Name = "label4";
             label4.Size = new Size(80, 23);
             label4.TabIndex = 7;
@@ -123,7 +137,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(26, 200);
+            label3.Location = new Point(26, 184);
             label3.Name = "label3";
             label3.Size = new Size(95, 23);
             label3.TabIndex = 6;
@@ -134,7 +148,7 @@
             panelPassword.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelPassword.BackColor = Color.FromArgb(17, 24, 39);
             panelPassword.Controls.Add(txtPassword);
-            panelPassword.Location = new Point(26, 312);
+            panelPassword.Location = new Point(26, 296);
             panelPassword.Name = "panelPassword";
             panelPassword.Size = new Size(368, 44);
             panelPassword.TabIndex = 5;
@@ -155,7 +169,7 @@
             panelUserName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelUserName.BackColor = Color.FromArgb(17, 24, 39);
             panelUserName.Controls.Add(txtUserName);
-            panelUserName.Location = new Point(26, 226);
+            panelUserName.Location = new Point(26, 210);
             panelUserName.Name = "panelUserName";
             panelUserName.Size = new Size(368, 44);
             panelUserName.TabIndex = 4;
@@ -177,7 +191,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label2.ForeColor = SystemColors.ControlDarkDark;
-            label2.Location = new Point(100, 162);
+            label2.Location = new Point(100, 148);
             label2.Name = "label2";
             label2.Size = new Size(216, 23);
             label2.TabIndex = 3;
@@ -189,7 +203,7 @@
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.White;
-            label1.Location = new Point(134, 124);
+            label1.Location = new Point(134, 110);
             label1.Name = "label1";
             label1.Size = new Size(156, 38);
             label1.TabIndex = 2;
@@ -201,7 +215,7 @@
             iconPanel.ColorBottom = Color.FromArgb(147, 51, 234);
             iconPanel.ColorTop = Color.FromArgb(219, 39, 119);
             iconPanel.Controls.Add(iconLabel);
-            iconPanel.Location = new Point(167, 29);
+            iconPanel.Location = new Point(167, 15);
             iconPanel.Name = "iconPanel";
             iconPanel.Size = new Size(80, 80);
             iconPanel.TabIndex = 1;
@@ -254,5 +268,6 @@
         private UI_Elements.HorizentalGradientPanelHelper panelButton;
         private Button btnLogin;
         private Label label5;
+        private Label lblMessage;
     }
 }
