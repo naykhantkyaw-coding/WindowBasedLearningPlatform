@@ -91,14 +91,23 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
         private void btn_courses_Click(object? sender, EventArgs e)
         {
+            // 1. Create the Courses listing page
             UC_Courses coursesPage = new UC_Courses();
+
+            // 2. LISTEN FOR THE SELECTION
+            // When "Start Learning" is clicked in UC_Courses, this lambda function runs.
             coursesPage.CourseSelected += (s, languageName) =>
             {
-                MessageBox.Show($"Starting {languageName} lessons...");
+                // 3. Create the Lesson Viewer for the selected language (e.g., "C#")
+                UC_LessonViewer lessonViewer = new UC_LessonViewer(languageName);
+
+                // 4. Switch the main view to show the lessons
+                ShowPage(lessonViewer);
             };
+
+            // 5. Show the courses list initially
             ShowPage(coursesPage);
         }
-
         private void btn_profile_Click(object sender, EventArgs e)
         {
             ShowPage(new UC_Profile(userModel));
