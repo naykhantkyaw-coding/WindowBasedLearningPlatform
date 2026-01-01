@@ -3,15 +3,15 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-namespace WindowBasedLearningPlatform.WindowApp.App
+namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 {
     public partial class UC_LessonViewer : UserControl
     {
         private string _language;
-        private Panel _lessonListPanel;
-        private Panel _contentPanel;
+        // Using SplitContainer is the best way to prevent overlap
+        private SplitContainer _layoutContainer;
         private Label _contentTitle;
-        private WebBrowser _contentBrowser; // Using WebBrowser for rich HTML content
+        private WebBrowser _contentBrowser;
 
         public UC_LessonViewer(string language)
         {
@@ -26,28 +26,35 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             this.Dock = DockStyle.Fill;
             this.BackColor = Color.White;
 
-            // 1. Sidebar for Lesson List (Left)
-            _lessonListPanel = new Panel();
-            _lessonListPanel.Dock = DockStyle.Left;
-            _lessonListPanel.Width = 250;
-           // _lessonListPanel.BackColor = Color.FromArgb(245, 247, 250);
-            _lessonListPanel.Padding = new Padding(10);
-            this.Controls.Add(_lessonListPanel);
+            // 1. Initialize SplitContainer
+            // This creates a physical separation between Sidebar and Content
+            _layoutContainer = new SplitContainer();
+            _layoutContainer.Dock = DockStyle.Fill;
+            _layoutContainer.FixedPanel = FixedPanel.Panel1; // Keep sidebar width fixed
+            _layoutContainer.IsSplitterFixed = true;         // Optional: Prevent resizing
+            _layoutContainer.SplitterDistance = 250;         // Width of sidebar
+            _layoutContainer.SplitterWidth = 1;              // Minimal visual divider
+            _layoutContainer.Panel1.BackColor = Color.FromArgb(245, 247, 250); // Sidebar Color
+            _layoutContainer.Panel2.BackColor = Color.White; // Content Color
 
-            // Header for Sidebar
+            this.Controls.Add(_layoutContainer);
+
+            // 2. Setup Sidebar (Panel1)
+            Panel sidebarPanel = _layoutContainer.Panel1;
+            sidebarPanel.Padding = new Padding(10);
+
+            // Sidebar Header
             Label lblListHeader = new Label();
             lblListHeader.Text = $"{_language} Lessons";
             lblListHeader.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblListHeader.ForeColor = Color.FromArgb(64, 64, 64);
             lblListHeader.Dock = DockStyle.Top;
             lblListHeader.Height = 40;
-            _lessonListPanel.Controls.Add(lblListHeader);
+            sidebarPanel.Controls.Add(lblListHeader);
 
-            // 2. Main Content Area (Fill)
-            _contentPanel = new Panel();
-            _contentPanel.Dock = DockStyle.Fill;
-            _contentPanel.Padding = new Padding(30);
-            this.Controls.Add(_contentPanel);
+            // 3. Setup Content Area (Panel2)
+            Panel contentPanel = _layoutContainer.Panel2;
+            contentPanel.Padding = new Padding(30);
 
             // Content Title
             _contentTitle = new Label();
@@ -56,28 +63,31 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             _contentTitle.ForeColor = Color.FromArgb(33, 33, 33);
             _contentTitle.Dock = DockStyle.Top;
             _contentTitle.Height = 50;
-            _contentPanel.Controls.Add(_contentTitle);
+            contentPanel.Controls.Add(_contentTitle);
 
-            // Content Browser (for Code blocks and formatted text)
+            // Content Browser
             _contentBrowser = new WebBrowser();
             _contentBrowser.Dock = DockStyle.Fill;
             _contentBrowser.IsWebBrowserContextMenuEnabled = false;
-            _contentPanel.Controls.Add(_contentBrowser);
-            _contentPanel.BringToFront();
+            contentPanel.Controls.Add(_contentBrowser);
+            _contentBrowser.BringToFront();
         }
 
         private void LoadLessons()
         {
-            // Mock Data - In real app, fetch from Tbl_CourseLesson where LanguageType = _language
+            // Mock Data
             var lessons = new List<(string Title, string Content)>
             {
                 ("1. Introduction", "<h1>Introduction</h1><p>Welcome to <b>" + _language + "</b>. It is a powerful language...</p>"),
-                ("2. Variables", "<h1>Variables</h1><p>Variables store data...</p><pre style='background:#eee;padding:10px'>int x = 5;</pre>"),
-                ("3. Control Flow", "<h1>Control Flow</h1><p>If/Else statements allow you to make decisions...</p>")
+                ("2. Variables", "<h1>Variables</h1><p>Variables store data...</p>"),
+                ("3. Control Flow", "<h1>Control Flow</h1><p>If/Else statements...</p>"),
+                ("4. Functions", "<h1>Functions</h1><p>Reusable blocks of code...</p>")
             };
 
-            // Create buttons for each lesson
-            int yPos = 50; // Start below header
+            int yPos = 50;
+            // Important: Add buttons to the SplitContainer's Panel1 (Sidebar)
+            Panel sidebarPanel = _layoutContainer.Panel1;
+
             foreach (var lesson in lessons)
             {
                 Button btnLesson = new Button();
@@ -92,24 +102,21 @@ namespace WindowBasedLearningPlatform.WindowApp.App
                 btnLesson.Location = new Point(10, yPos);
                 btnLesson.Cursor = Cursors.Hand;
 
-                // Load content on click
                 btnLesson.Click += (s, e) => DisplayLesson(lesson.Title, lesson.Content);
 
-                _lessonListPanel.Controls.Add(btnLesson);
+                sidebarPanel.Controls.Add(btnLesson);
                 yPos += 45;
             }
 
-            // Auto-load first lesson
             if (lessons.Count > 0) DisplayLesson(lessons[0].Title, lessons[0].Content);
         }
 
         private void DisplayLesson(string title, string htmlContent)
         {
             _contentTitle.Text = title;
-            // Add some basic styling to the HTML
             string styledHtml = $@"
                 <html>
-                <body style='font-family: Segoe UI, sans-serif; color: #333; padding: 10px;'>
+                <body style='font-family: Segoe UI, sans-serif; color: #333; padding: 10px; margin: 0;'>
                     {htmlContent}
                 </body>
                 </html>";
