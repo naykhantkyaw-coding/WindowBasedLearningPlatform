@@ -161,6 +161,7 @@
             txtPassword.ForeColor = Color.White;
             txtPassword.Location = new Point(3, 10);
             txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '.';
             txtPassword.Size = new Size(362, 24);
             txtPassword.TabIndex = 0;
             // 

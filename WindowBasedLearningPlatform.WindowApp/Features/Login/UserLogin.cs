@@ -15,6 +15,21 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Login
         {
             UserResponseModel model = new UserResponseModel();
             var db = new DatabaseService();
+
+            if(string.IsNullOrWhiteSpace(reqModel.UserName))
+            {
+                model.IsSuccess = false;
+                model.Message = "Please Enter UserName.";
+                return model;
+            }
+
+            if (string.IsNullOrWhiteSpace(reqModel.Password))
+            {
+                model.IsSuccess = false;
+                model.Message = "Please Enter Password.";
+                return model;
+            }
+
             var userName = reqModel.UserName?.Trim();
 
             var checkParams = new[]

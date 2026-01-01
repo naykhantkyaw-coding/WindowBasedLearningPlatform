@@ -65,7 +65,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         private void ShowDashboard()
         {
             UC_Dashboard dashboard = new UC_Dashboard();
-            dashboard.RequestOpenProfile += (s, e) => ShowPage(new UC_Profile(userModel));
+            dashboard.RequestOpenProfile += (s, e) => ShowPage(new ProfileUserControl(userModel));
             dashboard.RequestOpenCourses += (s, e) => btn_courses_Click(s, e);
             ShowPage(dashboard);
         }
@@ -110,7 +110,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         }
         private void btn_profile_Click(object sender, EventArgs e)
         {
-            ShowPage(new UC_Profile(userModel));
+           ShowPage(new ProfileUserControl(userModel));
         }
 
         private void btn_signout_Click(object sender, EventArgs e)
