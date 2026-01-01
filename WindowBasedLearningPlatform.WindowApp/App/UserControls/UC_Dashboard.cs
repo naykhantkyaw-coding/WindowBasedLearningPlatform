@@ -24,7 +24,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         private void SetupDashboardUI()
         {
             // 1. Base Styling
-            this.BackColor = Color.FromArgb(245, 247, 250); // Light Grey Background
+           // this.BackColor = Color.FromArgb(245, 247, 250); // Light Grey Background
             this.Padding = new Padding(30);
 
             // 2. Title Label (Welcome Message)

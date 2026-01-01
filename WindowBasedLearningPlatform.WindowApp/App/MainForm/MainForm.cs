@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.App.UserControls;
 using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
+using WindowBasedLearningPlatform.WindowApp.Services;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
@@ -14,22 +15,16 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         public MainForm()
         {
             InitializeComponent();
-
-            // --- FIX FOR GRADIENT SIDEBAR ---
-            // 1. Enable double buffering to prevent flicker
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-
-            // 2. Find the sidebar (It might be null if not initialized yet, but InitComponent handles it)
             Control? sidebar = this.Controls.Find("panelSidebar", true).FirstOrDefault();
-
-            // 3. Force a repaint if it exists
             if (sidebar != null)
             {
                 sidebar.Invalidate();
             }
-
-            // Start at Login Screen
             ShowLogin();
+            FormDesignService.SetupModernButton(btn_profile);
+            FormDesignService.SetupModernButton(btn_Courses);
+            FormDesignService.SetupModernButton(btn_dashboard);
         }
 
         // --- NAVIGATION HELPERS ---
@@ -110,7 +105,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         }
         private void btn_profile_Click(object sender, EventArgs e)
         {
-           ShowPage(new ProfileUserControl(userModel));
+            ShowPage(new ProfileUserControl(userModel));
         }
 
         private void btn_signout_Click(object sender, EventArgs e)
