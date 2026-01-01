@@ -33,8 +33,8 @@
             progressBar1 = new ProgressBar();
             panel1 = new Panel();
             panelSidebar = new GradientPanel();
-            button2 = new Button();
-            button1 = new Button();
+            btn_Title = new Button();
+            btn_SignOut = new Button();
             btn_dashboard = new Button();
             btn_profile = new Button();
             btn_Courses = new Button();
@@ -74,8 +74,8 @@
             // 
             panelSidebar.ColorBottom = Color.FromArgb(26, 5, 16);
             panelSidebar.ColorTop = Color.FromArgb(144, 12, 63);
-            panelSidebar.Controls.Add(button2);
-            panelSidebar.Controls.Add(button1);
+            panelSidebar.Controls.Add(btn_Title);
+            panelSidebar.Controls.Add(btn_SignOut);
             panelSidebar.Controls.Add(btn_dashboard);
             panelSidebar.Controls.Add(btn_profile);
             panelSidebar.Controls.Add(btn_Courses);
@@ -86,39 +86,39 @@
             panelSidebar.Size = new Size(307, 908);
             panelSidebar.TabIndex = 2;
             // 
-            // button2
+            // btn_Title
             // 
-            button2.BackColor = Color.Transparent;
-            button2.Dock = DockStyle.Top;
-            button2.FlatStyle = FlatStyle.Popup;
-            button2.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.ForeColor = Color.White;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.ImageAlign = ContentAlignment.MiddleLeft;
-            button2.Location = new Point(0, 0);
-            button2.Name = "button2";
-            button2.Size = new Size(307, 77);
-            button2.TabIndex = 15;
-            button2.Text = "CODE LEARNER";
-            button2.UseVisualStyleBackColor = false;
+            btn_Title.BackColor = Color.Transparent;
+            btn_Title.Dock = DockStyle.Top;
+            btn_Title.FlatStyle = FlatStyle.Flat;
+            btn_Title.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_Title.ForeColor = Color.White;
+            btn_Title.Image = (Image)resources.GetObject("btn_Title.Image");
+            btn_Title.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Title.Location = new Point(0, 0);
+            btn_Title.Name = "btn_Title";
+            btn_Title.Size = new Size(307, 77);
+            btn_Title.TabIndex = 15;
+            btn_Title.Text = "CODE LEARNER";
+            btn_Title.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btn_SignOut
             // 
-            button1.BackColor = Color.Transparent;
-            button1.Cursor = Cursors.Hand;
-            button1.Dock = DockStyle.Bottom;
-            button1.FlatStyle = FlatStyle.Popup;
-            button1.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.ForeColor = Color.White;
-            button1.Image = (Image)resources.GetObject("button1.Image");
-            button1.ImageAlign = ContentAlignment.MiddleLeft;
-            button1.Location = new Point(0, 831);
-            button1.Name = "button1";
-            button1.Size = new Size(307, 77);
-            button1.TabIndex = 14;
-            button1.Text = "Sign Out";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += btn_signout_Click;
+            btn_SignOut.BackColor = Color.Transparent;
+            btn_SignOut.Cursor = Cursors.Hand;
+            btn_SignOut.Dock = DockStyle.Bottom;
+            btn_SignOut.FlatStyle = FlatStyle.Popup;
+            btn_SignOut.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_SignOut.ForeColor = Color.White;
+            btn_SignOut.Image = (Image)resources.GetObject("btn_SignOut.Image");
+            btn_SignOut.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_SignOut.Location = new Point(0, 831);
+            btn_SignOut.Name = "btn_SignOut";
+            btn_SignOut.Size = new Size(307, 77);
+            btn_SignOut.TabIndex = 14;
+            btn_SignOut.Text = "Sign Out";
+            btn_SignOut.UseVisualStyleBackColor = false;
+            btn_SignOut.Click += btn_signout_Click;
             // 
             // btn_dashboard
             // 
@@ -195,11 +195,11 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Panel panel1;
         private GradientPanel panelSidebar;
-        private Button button1;
+        private Button btn_SignOut;
         private Button btn_profile;
         private Button btn_dashboard;
         private Button btn_Courses;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private Button button2;
+        private Button btn_Title;
     }
 }

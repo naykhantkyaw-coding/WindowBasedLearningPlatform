@@ -21,7 +21,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         private void SetupUI()
         {
             this.Dock = DockStyle.Fill;
-           // this.BackColor = Color.FromArgb(245, 247, 250);
             this.Padding = new Padding(30);
 
             // Header

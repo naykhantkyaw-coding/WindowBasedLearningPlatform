@@ -22,9 +22,14 @@ namespace WindowBasedLearningPlatform.WindowApp.App
                 sidebar.Invalidate();
             }
             ShowLogin();
+
+            btn_Title.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btn_Title.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
             FormDesignService.SetupModernButton(btn_profile);
             FormDesignService.SetupModernButton(btn_Courses);
             FormDesignService.SetupModernButton(btn_dashboard);
+            FormDesignService.SetupModernButton(btn_SignOut);
         }
 
         // --- NAVIGATION HELPERS ---

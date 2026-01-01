@@ -30,7 +30,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             _lessonListPanel = new Panel();
             _lessonListPanel.Dock = DockStyle.Left;
             _lessonListPanel.Width = 250;
-            _lessonListPanel.BackColor = Color.FromArgb(245, 247, 250);
+           // _lessonListPanel.BackColor = Color.FromArgb(245, 247, 250);
             _lessonListPanel.Padding = new Padding(10);
             this.Controls.Add(_lessonListPanel);
 
