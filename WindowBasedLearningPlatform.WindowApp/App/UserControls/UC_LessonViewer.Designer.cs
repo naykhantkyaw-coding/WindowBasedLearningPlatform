@@ -28,15 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // UC_LessonViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "UC_LessonViewer";
-            this.Size = new System.Drawing.Size(900, 600);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(15, 23, 42);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "UC_LessonViewer";
+            Size = new Size(1029, 800);
+            ResumeLayout(false);
 
         }
 

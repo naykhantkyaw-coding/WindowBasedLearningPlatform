@@ -42,8 +42,9 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(800, 450);
+            panel1.Size = new Size(492, 281);
             panel1.TabIndex = 0;
             // 
             // label2
@@ -51,9 +52,10 @@
             label2.AutoSize = true;
             label2.Dock = DockStyle.Left;
             label2.Font = new Font("Segoe UI", 10F);
-            label2.Location = new Point(449, 0);
+            label2.Location = new Point(280, 0);
+            label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
-            label2.Size = new Size(195, 37);
+            label2.Size = new Size(122, 23);
             label2.TabIndex = 2;
             label2.Text = "(\"hello world\");";
             // 
@@ -61,9 +63,10 @@
             // 
             textBox1.Dock = DockStyle.Left;
             textBox1.Font = new Font("Segoe UI", 10F);
-            textBox1.Location = new Point(119, 0);
+            textBox1.Location = new Point(75, 0);
+            textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(330, 43);
+            textBox1.Size = new Size(205, 30);
             textBox1.TabIndex = 1;
             textBox1.Text = "123456789012334567890";
             // 
@@ -73,17 +76,19 @@
             label1.Dock = DockStyle.Left;
             label1.Font = new Font("Segoe UI", 10F);
             label1.Location = new Point(0, 0);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(119, 37);
+            label1.Size = new Size(75, 23);
             label1.TabIndex = 0;
             label1.Text = "Console.";
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(13F, 32F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(492, 281);
             Controls.Add(panel1);
+            Margin = new Padding(2);
             Name = "Form1";
             Text = "Form1";
             panel1.ResumeLayout(false);

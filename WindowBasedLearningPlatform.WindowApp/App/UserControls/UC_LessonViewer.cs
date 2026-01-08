@@ -33,8 +33,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             _layoutContainer.IsSplitterFixed = true;
             _layoutContainer.SplitterDistance = 250;
             _layoutContainer.SplitterWidth = 1;
-            _layoutContainer.Panel1.BackColor = Color.FromArgb(245, 247, 250);
-            _layoutContainer.Panel2.BackColor = Color.White;
+            //_layoutContainer.Panel1.BackColor = Color.FromArgb(245, 247, 250);
+            //_layoutContainer.Panel2.BackColor = Color.White;
 
             this.Controls.Add(_layoutContainer);
 
