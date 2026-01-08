@@ -17,5 +17,20 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         {
             return "Insert into Tbl_User (UserName,LoginPassword) Values (@userName,@password)";
         }
+
+        public static string LoadSection()
+        {
+            return "SELECT SectionId,SectionCode,SectionName FROM Tbl_Sections ORDER BY SortOrder";
+        }
+
+        public static string LoadLesson()
+        {
+            return "SELECT LessonId, LessonCode,SectionCode,LessonTitle FROM Tbl_Lessons WHERE SectionCode = @scode ORDER BY SortOrder";
+        }
+
+        public static string LoadLessonContent()
+        {
+            return "SELECT ContentType, ContentBody FROM Tbl_LessonContents WHERE LessonCode = @lcode";
+        }
     }
 }
