@@ -69,7 +69,7 @@ viewer.ShowDialog();
         {
             if (string.IsNullOrWhiteSpace(txtMarkdownInput.Text))
             {
-                MessageBox.Show("Please enter some markdown content first!", 
+                MessageBox.Show("Please enter some markdown content first!",
                     "No Content", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -112,6 +112,11 @@ Programming enables us to automate tasks and solve complex problems efficiently.
 
 ---
 *Content retrieved from database*";
+        }
+
+        private void panelButtons_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

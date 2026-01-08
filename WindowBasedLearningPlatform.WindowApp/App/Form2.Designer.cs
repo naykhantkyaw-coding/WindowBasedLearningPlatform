@@ -28,123 +28,131 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnOpenMarkdownViewer = new System.Windows.Forms.Button();
-            this.btnOpenFromDatabase = new System.Windows.Forms.Button();
-            this.btnOpenFromTextBox = new System.Windows.Forms.Button();
-            this.txtMarkdownInput = new System.Windows.Forms.TextBox();
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.lblInputLabel = new System.Windows.Forms.Label();
-            this.panelButtons = new System.Windows.Forms.Panel();
-            this.panelButtons.SuspendLayout();
-            this.SuspendLayout();
+            btnOpenMarkdownViewer = new Button();
+            btnOpenFromDatabase = new Button();
+            btnOpenFromTextBox = new Button();
+            txtMarkdownInput = new TextBox();
+            lblTitle = new Label();
+            lblInputLabel = new Label();
+            panelButtons = new Panel();
+            panelButtons.SuspendLayout();
+            SuspendLayout();
             // 
             // btnOpenMarkdownViewer
             // 
-            this.btnOpenMarkdownViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(152)))), ((int)(((byte)(219)))));
-            this.btnOpenMarkdownViewer.FlatAppearance.BorderSize = 0;
-            this.btnOpenMarkdownViewer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenMarkdownViewer.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnOpenMarkdownViewer.ForeColor = System.Drawing.Color.White;
-            this.btnOpenMarkdownViewer.Location = new System.Drawing.Point(20, 20);
-            this.btnOpenMarkdownViewer.Name = "btnOpenMarkdownViewer";
-            this.btnOpenMarkdownViewer.Size = new System.Drawing.Size(300, 50);
-            this.btnOpenMarkdownViewer.TabIndex = 0;
-            this.btnOpenMarkdownViewer.Text = "Example 1: Open with Sample Content";
-            this.btnOpenMarkdownViewer.UseVisualStyleBackColor = false;
-            this.btnOpenMarkdownViewer.Click += new System.EventHandler(this.btnOpenMarkdownViewer_Click);
+            btnOpenMarkdownViewer.BackColor = Color.FromArgb(52, 152, 219);
+            btnOpenMarkdownViewer.FlatAppearance.BorderSize = 0;
+            btnOpenMarkdownViewer.FlatStyle = FlatStyle.Flat;
+            btnOpenMarkdownViewer.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnOpenMarkdownViewer.ForeColor = Color.White;
+            btnOpenMarkdownViewer.Location = new Point(23, 27);
+            btnOpenMarkdownViewer.Margin = new Padding(3, 4, 3, 4);
+            btnOpenMarkdownViewer.Name = "btnOpenMarkdownViewer";
+            btnOpenMarkdownViewer.Size = new Size(343, 67);
+            btnOpenMarkdownViewer.TabIndex = 0;
+            btnOpenMarkdownViewer.Text = "Example 1: Open with Sample Content";
+            btnOpenMarkdownViewer.UseVisualStyleBackColor = false;
+            btnOpenMarkdownViewer.Click += btnOpenMarkdownViewer_Click;
             // 
             // btnOpenFromDatabase
             // 
-            this.btnOpenFromDatabase.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
-            this.btnOpenFromDatabase.FlatAppearance.BorderSize = 0;
-            this.btnOpenFromDatabase.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenFromDatabase.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnOpenFromDatabase.ForeColor = System.Drawing.Color.White;
-            this.btnOpenFromDatabase.Location = new System.Drawing.Point(20, 90);
-            this.btnOpenFromDatabase.Name = "btnOpenFromDatabase";
-            this.btnOpenFromDatabase.Size = new System.Drawing.Size(300, 50);
-            this.btnOpenFromDatabase.TabIndex = 1;
-            this.btnOpenFromDatabase.Text = "Example 2: Open from Database";
-            this.btnOpenFromDatabase.UseVisualStyleBackColor = false;
-            this.btnOpenFromDatabase.Click += new System.EventHandler(this.btnOpenFromDatabase_Click);
+            btnOpenFromDatabase.BackColor = Color.FromArgb(46, 204, 113);
+            btnOpenFromDatabase.FlatAppearance.BorderSize = 0;
+            btnOpenFromDatabase.FlatStyle = FlatStyle.Flat;
+            btnOpenFromDatabase.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnOpenFromDatabase.ForeColor = Color.White;
+            btnOpenFromDatabase.Location = new Point(23, 120);
+            btnOpenFromDatabase.Margin = new Padding(3, 4, 3, 4);
+            btnOpenFromDatabase.Name = "btnOpenFromDatabase";
+            btnOpenFromDatabase.Size = new Size(343, 67);
+            btnOpenFromDatabase.TabIndex = 1;
+            btnOpenFromDatabase.Text = "Example 2: Open from Database";
+            btnOpenFromDatabase.UseVisualStyleBackColor = false;
+            btnOpenFromDatabase.Click += btnOpenFromDatabase_Click;
             // 
             // btnOpenFromTextBox
             // 
-            this.btnOpenFromTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(89)))), ((int)(((byte)(182)))));
-            this.btnOpenFromTextBox.FlatAppearance.BorderSize = 0;
-            this.btnOpenFromTextBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenFromTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnOpenFromTextBox.ForeColor = System.Drawing.Color.White;
-            this.btnOpenFromTextBox.Location = new System.Drawing.Point(20, 160);
-            this.btnOpenFromTextBox.Name = "btnOpenFromTextBox";
-            this.btnOpenFromTextBox.Size = new System.Drawing.Size(300, 50);
-            this.btnOpenFromTextBox.TabIndex = 2;
-            this.btnOpenFromTextBox.Text = "Example 3: Open from TextBox Below";
-            this.btnOpenFromTextBox.UseVisualStyleBackColor = false;
-            this.btnOpenFromTextBox.Click += new System.EventHandler(this.btnOpenFromTextBox_Click);
+            btnOpenFromTextBox.BackColor = Color.FromArgb(155, 89, 182);
+            btnOpenFromTextBox.FlatAppearance.BorderSize = 0;
+            btnOpenFromTextBox.FlatStyle = FlatStyle.Flat;
+            btnOpenFromTextBox.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnOpenFromTextBox.ForeColor = Color.White;
+            btnOpenFromTextBox.Location = new Point(23, 213);
+            btnOpenFromTextBox.Margin = new Padding(3, 4, 3, 4);
+            btnOpenFromTextBox.Name = "btnOpenFromTextBox";
+            btnOpenFromTextBox.Size = new Size(343, 67);
+            btnOpenFromTextBox.TabIndex = 2;
+            btnOpenFromTextBox.Text = "Example 3: Open from TextBox Below";
+            btnOpenFromTextBox.UseVisualStyleBackColor = false;
+            btnOpenFromTextBox.Click += btnOpenFromTextBox_Click;
             // 
             // txtMarkdownInput
             // 
-            this.txtMarkdownInput.Font = new System.Drawing.Font("Consolas", 9.75F);
-            this.txtMarkdownInput.Location = new System.Drawing.Point(30, 340);
-            this.txtMarkdownInput.Multiline = true;
-            this.txtMarkdownInput.Name = "txtMarkdownInput";
-            this.txtMarkdownInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMarkdownInput.Size = new System.Drawing.Size(740, 270);
-            this.txtMarkdownInput.TabIndex = 3;
-            this.txtMarkdownInput.Text = "# Your Markdown Here\r\n\r\n## Try editing this!\r\n\r\nWrite your **markdown** cont" +
-    "ent here and click the button above to preview it.\r\n\r\n- Item 1\r\n- Item 2\r\n- Ite" +
-    "m 3";
+            txtMarkdownInput.Font = new Font("Consolas", 9.75F);
+            txtMarkdownInput.Location = new Point(34, 453);
+            txtMarkdownInput.Margin = new Padding(3, 4, 3, 4);
+            txtMarkdownInput.Multiline = true;
+            txtMarkdownInput.Name = "txtMarkdownInput";
+            txtMarkdownInput.ScrollBars = ScrollBars.Vertical;
+            txtMarkdownInput.Size = new Size(845, 359);
+            txtMarkdownInput.TabIndex = 3;
+            txtMarkdownInput.Text = "# Your Markdown Here\r\n\r\n## Try editing this!\r\n\r\nWrite your **markdown** content here and click the button above to preview it.\r\n\r\n- Item 1\r\n- Item 2\r\n- Item 3";
+           // txtMarkdownInput.TextChanged += this.txtMarkdownInput_TextChanged;
             // 
             // lblTitle
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this.lblTitle.Location = new System.Drawing.Point(25, 20);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(352, 30);
-            this.lblTitle.TabIndex = 4;
-            this.lblTitle.Text = "MarkdownViewer Usage Examples";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.FromArgb(44, 62, 80);
+            lblTitle.Location = new Point(29, 27);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(459, 37);
+            lblTitle.TabIndex = 4;
+            lblTitle.Text = "MarkdownViewer Usage Examples";
+            //lblTitle.Click += this.lblTitle_Click;
             // 
             // lblInputLabel
             // 
-            this.lblInputLabel.AutoSize = true;
-            this.lblInputLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblInputLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
-            this.lblInputLabel.Location = new System.Drawing.Point(30, 310);
-            this.lblInputLabel.Name = "lblInputLabel";
-            this.lblInputLabel.Size = new System.Drawing.Size(238, 20);
-            this.lblInputLabel.TabIndex = 5;
-            this.lblInputLabel.Text = "Enter your markdown content:";
+            lblInputLabel.AutoSize = true;
+            lblInputLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblInputLabel.ForeColor = Color.FromArgb(44, 62, 80);
+            lblInputLabel.Location = new Point(34, 413);
+            lblInputLabel.Name = "lblInputLabel";
+            lblInputLabel.Size = new Size(287, 25);
+            lblInputLabel.TabIndex = 5;
+            lblInputLabel.Text = "Enter your markdown content:";
+          //  lblInputLabel.Click += this.lblInputLabel_Click;
             // 
             // panelButtons
             // 
-            this.panelButtons.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(240)))), ((int)(((byte)(241)))));
-            this.panelButtons.Controls.Add(this.btnOpenMarkdownViewer);
-            this.panelButtons.Controls.Add(this.btnOpenFromDatabase);
-            this.panelButtons.Controls.Add(this.btnOpenFromTextBox);
-            this.panelButtons.Location = new System.Drawing.Point(30, 60);
-            this.panelButtons.Name = "panelButtons";
-            this.panelButtons.Size = new System.Drawing.Size(740, 230);
-            this.panelButtons.TabIndex = 6;
+            panelButtons.BackColor = Color.FromArgb(236, 240, 241);
+            panelButtons.Controls.Add(btnOpenMarkdownViewer);
+            panelButtons.Controls.Add(btnOpenFromDatabase);
+            panelButtons.Controls.Add(btnOpenFromTextBox);
+            panelButtons.Location = new Point(34, 80);
+            panelButtons.Margin = new Padding(3, 4, 3, 4);
+            panelButtons.Name = "panelButtons";
+            panelButtons.Size = new Size(846, 307);
+            panelButtons.TabIndex = 6;
+            panelButtons.Paint += panelButtons_Paint;
             // 
             // Form2
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 630);
-            this.Controls.Add(this.panelButtons);
-            this.Controls.Add(this.lblInputLabel);
-            this.Controls.Add(this.lblTitle);
-            this.Controls.Add(this.txtMarkdownInput);
-            this.Name = "Form2";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MarkdownViewer Example - Form2";
-            this.panelButtons.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(914, 840);
+            Controls.Add(panelButtons);
+            Controls.Add(lblInputLabel);
+            Controls.Add(lblTitle);
+            Controls.Add(txtMarkdownInput);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "Form2";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "MarkdownViewer Example - Form2";
+            panelButtons.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

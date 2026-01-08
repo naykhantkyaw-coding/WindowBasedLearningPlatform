@@ -25,12 +25,12 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
 
         public static string LoadLesson()
         {
-            return "SELECT LessonId, LessonCode,SectionCode,LessonTitle FROM Tbl_Lessons WHERE SectionCode = @scode ORDER BY SortOrder";
+            return "SELECT LessonId, LessonCode,SectionCode,LessonTitle FROM Tbl_Lessons WHERE SectionCode = @scode and SectionId=@sid ORDER BY SortOrder";
         }
 
         public static string LoadLessonContent()
         {
-            return "SELECT ContentType, ContentBody FROM Tbl_LessonContents WHERE LessonCode = @lcode";
+            return "SELECT ContentType, ContentBody FROM Tbl_LessonContents WHERE LessonCode = @lcode and LessonId =@lid";
         }
     }
 }

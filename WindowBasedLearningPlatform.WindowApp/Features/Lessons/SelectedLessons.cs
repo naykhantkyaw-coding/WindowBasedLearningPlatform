@@ -26,13 +26,14 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
             return model;
         }
 
-        public static LessonsResponseModel LoadLessons(string sectionCode)
+        public static LessonsResponseModel LoadLessons(string sectionCode,int sectionId)
         {
             LessonsResponseModel model = new LessonsResponseModel();
             var db = new DatabaseService();
             var parameter = new[]
             {
-                new SqlParameter("@scode", sectionCode)
+                new SqlParameter("@scode", sectionCode),
+                new SqlParameter("@sid", sectionId)
             };
             var item = db.QueryFirstOrDefault<LessonsResponseModel>(
              QueryService.LoadLesson(), parameter);
@@ -44,16 +45,21 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
 
         }
 
-        public static LessonContentsResponseModel LoadLessonContent(string lessonCode)
+        public static LessonContentsResponseModel LoadLessonContent(string lessonCode,int lessonId)
         {
             LessonContentsResponseModel model = new LessonContentsResponseModel();
             var db = new DatabaseService();
             var parameter = new[]
             {
-                new SqlParameter("@lcode", lessonCode)
+                new SqlParameter("@lcode", lessonCode),
+                new SqlParameter("@lid", lessonId)
             };
             var item = db.QueryFirstOrDefault<LessonContentsResponseModel>(
             QueryService.LoadLessonContent(), parameter);
+            if (item is not null)
+            {
+                model = item;
+            }
             return model;
         }
     }
