@@ -31,17 +31,16 @@
             menuPanel = new Panel();
             lessonsPanel = new Panel();
             lessonsWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
-            menuWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            btn_menuTitle = new Button();
             menuPanel.SuspendLayout();
             lessonsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lessonsWebView).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)menuWebView).BeginInit();
             SuspendLayout();
             // 
             // menuPanel
             // 
             menuPanel.BackColor = Color.FromArgb(31, 41, 55);
-            menuPanel.Controls.Add(menuWebView);
+            menuPanel.Controls.Add(btn_menuTitle);
             menuPanel.Dock = DockStyle.Left;
             menuPanel.Location = new Point(0, 0);
             menuPanel.Name = "menuPanel";
@@ -69,17 +68,19 @@
             lessonsWebView.TabIndex = 0;
             lessonsWebView.ZoomFactor = 1D;
             // 
-            // menuWebView
+            // btn_menuTitle
             // 
-            menuWebView.AllowExternalDrop = true;
-            menuWebView.CreationProperties = null;
-            menuWebView.DefaultBackgroundColor = Color.White;
-            menuWebView.Dock = DockStyle.Fill;
-            menuWebView.Location = new Point(0, 0);
-            menuWebView.Name = "menuWebView";
-            menuWebView.Size = new Size(219, 908);
-            menuWebView.TabIndex = 0;
-            menuWebView.ZoomFactor = 1D;
+            btn_menuTitle.BackColor = Color.Transparent;
+            btn_menuTitle.Dock = DockStyle.Top;
+            btn_menuTitle.FlatStyle = FlatStyle.Flat;
+            btn_menuTitle.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_menuTitle.ForeColor = Color.White;
+            btn_menuTitle.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_menuTitle.Location = new Point(0, 0);
+            btn_menuTitle.Name = "btn_menuTitle";
+            btn_menuTitle.Size = new Size(219, 77);
+            btn_menuTitle.TabIndex = 16;
+            btn_menuTitle.UseVisualStyleBackColor = false;
             // 
             // LessonViewerUserControl
             // 
@@ -93,15 +94,14 @@
             menuPanel.ResumeLayout(false);
             lessonsPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)lessonsWebView).EndInit();
-            ((System.ComponentModel.ISupportInitialize)menuWebView).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Panel menuPanel;
-        private Microsoft.Web.WebView2.WinForms.WebView2 menuWebView;
         private Panel lessonsPanel;
         private Microsoft.Web.WebView2.WinForms.WebView2 lessonsWebView;
+        private Button btn_menuTitle;
     }
 }

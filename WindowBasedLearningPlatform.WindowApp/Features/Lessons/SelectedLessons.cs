@@ -13,7 +13,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
 {
     public static class SelectedLessons
     {
-        public static List<SectionResponseModel> LoadSidebar()
+        public static List<SectionResponseModel> LoadSidebar(string code)
         {
             List<SectionResponseModel> model = new List<SectionResponseModel>();
             var db = new DatabaseService();
