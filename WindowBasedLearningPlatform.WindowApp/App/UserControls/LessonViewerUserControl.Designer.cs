@@ -31,8 +31,8 @@
             menuPanel = new Panel();
             btn_menuTitle = new Button();
             lessonsPanel = new Panel();
-            lessonsWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             titlepanel = new Panel();
+            lessonsWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
             menuPanel.SuspendLayout();
             lessonsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lessonsWebView).BeginInit();
@@ -66,31 +66,31 @@
             // 
             lessonsPanel.Controls.Add(titlepanel);
             lessonsPanel.Controls.Add(lessonsWebView);
-            lessonsPanel.Dock = DockStyle.Left;
+            lessonsPanel.Dock = DockStyle.Fill;
             lessonsPanel.Location = new Point(219, 0);
             lessonsPanel.Name = "lessonsPanel";
-            lessonsPanel.Size = new Size(821, 908);
+            lessonsPanel.Size = new Size(827, 908);
             lessonsPanel.TabIndex = 1;
-            // 
-            // lessonsWebView
-            // 
-            lessonsWebView.AllowExternalDrop = true;
-            lessonsWebView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lessonsWebView.CreationProperties = null;
-            lessonsWebView.DefaultBackgroundColor = Color.White;
-            lessonsWebView.Location = new Point(3, 83);
-            lessonsWebView.Name = "lessonsWebView";
-            lessonsWebView.Size = new Size(812, 611);
-            lessonsWebView.TabIndex = 0;
-            lessonsWebView.ZoomFactor = 1D;
             // 
             // titlepanel
             // 
             titlepanel.Dock = DockStyle.Top;
             titlepanel.Location = new Point(0, 0);
             titlepanel.Name = "titlepanel";
-            titlepanel.Size = new Size(821, 74);
+            titlepanel.Size = new Size(827, 74);
             titlepanel.TabIndex = 1;
+            // 
+            // lessonsWebView
+            // 
+            lessonsWebView.AllowExternalDrop = true;
+            lessonsWebView.CreationProperties = null;
+            lessonsWebView.DefaultBackgroundColor = Color.White;
+            lessonsWebView.Dock = DockStyle.Fill;
+            lessonsWebView.Location = new Point(0, 0);
+            lessonsWebView.Name = "lessonsWebView";
+            lessonsWebView.Size = new Size(827, 908);
+            lessonsWebView.TabIndex = 0;
+            lessonsWebView.ZoomFactor = 1D;
             // 
             // LessonViewerUserControl
             // 

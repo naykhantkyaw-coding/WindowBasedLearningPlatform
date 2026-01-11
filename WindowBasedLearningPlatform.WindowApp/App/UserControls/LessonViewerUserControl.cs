@@ -1,16 +1,25 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.Scripting;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.Features.Lessons;
 using WindowBasedLearningPlatform.WindowApp.Models.LessonsModel;
 using static System.Collections.Specialized.BitVector32;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Resources.ResXFileRef;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 {
@@ -26,6 +35,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         {
             InitializeComponent();
             InitializeAsync();
+            menuPanel.AutoScroll = true;
             _language = language;
             btn_menuTitle.Text = _language;
             LoadSidebar();
@@ -35,7 +45,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             // so it's always accessible.
             Button btnPractice = new Button();
             btnPractice.Text = "💻 Open Code Playground";
-            btnPractice.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            btnPractice.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
             btnPractice.BackColor = ColorTranslator.FromHtml("#fdd23f"); // Brand Yellow
             btnPractice.ForeColor = Color.Black;
             btnPractice.FlatStyle = FlatStyle.Flat;
@@ -87,7 +97,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             titleButton.FlatAppearance.BorderSize = 0;
             titleButton.BackColor = Color.FromArgb(30, 30, 30);
             titleButton.ForeColor = Color.White;
-            titleButton.Font = new Font("Segoe UI", 11);
+            titleButton.Font = new System.Drawing.Font("Segoe UI", 11);
 
             menuPanel.Controls.Add(titleButton);
 
@@ -109,7 +119,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                     btn.ForeColor = Color.White;
                     btn.BackColor = Color.FromArgb(30, 30, 30);
                     btn.TextAlign = ContentAlignment.MiddleLeft;
-                    btn.Font = new Font("Segoe UI", 11);
+                    btn.Font = new System.Drawing.Font("Segoe UI", 11);
                     btn.Click += SectionButton_Click;
 
                     menuPanel.Controls.Add(btn);
@@ -144,7 +154,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             {
                 Text = $"{lessons.LessonTitle}",
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 20),
+                Font = new System.Drawing.Font("Segoe UI", 20),
                 AutoSize = true
             };
 
@@ -239,94 +249,128 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
   <meta charset=""UTF-8"" />
   <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />
   <title>Markdown Viewer</title>
+
   <style>
-    body {{ 
-      font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif; 
-      padding: 24px; 
-      line-height: 1.6; 
+    body {{
+      font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+      padding: 24px;
+      line-height: 1.6;
       max-width: 900px;
       margin: 0 auto;
-      background: #ffffff;
-      color: #333;
+      background: rgb(31, 41, 55);
+      color: white;
     }}
-    h1, h2, h3, h4, h5, h6 {{ 
-      margin-top: 24px; 
+
+    h1, h2, h3, h4, h5, h6 {{
+      margin-top: 24px;
       margin-bottom: 16px;
       font-weight: 600;
       line-height: 1.25;
+      color: white;
     }}
-    h1 {{ font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 8px; }}
-    h2 {{ font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 8px; }}
-    h3 {{ font-size: 1.25em; }}
-    pre {{ 
-      padding: 16px; 
-      overflow: auto; 
-      background: #f6f8fa;
+
+    h1 {{
+      font-size: 2em;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 8px;
+    }}
+
+    h2 {{
+      font-size: 1.5em;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 8px;
+    }}
+
+    h3 {{
+      font-size: 1.25em;
+    }}
+
+    pre {{
+      padding: 16px;
+      overflow: auto;
+      background: rgb(15, 23, 42);
       border-radius: 6px;
       font-size: 14px;
       line-height: 1.45;
+      color: white;
     }}
-    code {{ 
-      background: #f6f8fa; 
+
+    code {{
+      background: rgb(15, 23, 42);
       border-radius: 3px;
       padding: 2px 6px;
       font-family: 'Consolas', 'Monaco', monospace;
       font-size: 85%;
+      color: white;
     }}
+
     pre code {{
       background: transparent;
       padding: 0;
+      color: white;
     }}
-    table {{ 
-      border-collapse: collapse; 
-      width: 100%; 
+
+    table {{
+      border-collapse: collapse;
+      width: 100%;
       margin: 16px 0;
     }}
-    th, td {{ 
-      border: 1px solid #dfe2e5; 
-      padding: 8px 13px; 
+
+    th, td {{
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 8px 13px;
       text-align: left;
+      color: white;
     }}
+
     th {{
-      background: #f6f8fa;
+      background: rgba(255,255,255,0.1);
       font-weight: 600;
     }}
+
     tr:nth-child(even) {{
-      background: #f6f8fa;
+      background: rgba(255,255,255,0.05);
     }}
-    blockquote {{ 
-      border-left: 4px solid #dfe2e5; 
-      padding-left: 16px; 
-      margin-left: 0; 
-      color: #6a737d;
+
+    blockquote {{
+      border-left: 4px solid rgba(255,255,255,0.3);
+      padding-left: 16px;
+      color: rgba(255,255,255,0.8);
       margin: 16px 0;
     }}
+
     a {{
-      color: #0366d6;
+      color: #93c5fd;
       text-decoration: none;
     }}
+
     a:hover {{
       text-decoration: underline;
     }}
+
     img {{
       max-width: 100%;
       height: auto;
     }}
+
     ul, ol {{
       padding-left: 2em;
       margin: 16px 0;
     }}
+
     li {{
       margin: 4px 0;
     }}
   </style>
 </head>
+
 <body>
   <div id=""output""></div>
 
   <script>
     {showdownJs}
   </script>
+
   <script>
     try {{
       const converter = new showdown.Converter({{
@@ -342,7 +386,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
       const html = converter.makeHtml(markdownText);
       document.getElementById('output').innerHTML = html;
     }} catch (error) {{
-      document.getElementById('output').innerHTML = '<p style=""color: red;"">Error rendering markdown: ' + error.message + '</p>';
+      document.getElementById('output').innerHTML =
+        '<p style=""color: red;"">Error rendering markdown: ' + error.message + '</p>';
     }}
   </script>
 </body>
@@ -352,3 +397,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 
     }
 }
+
+
+
+
+
