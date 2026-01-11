@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WindowBasedLearningPlatform.WindowApp.Models.LessonsModel;
 using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 using WindowBasedLearningPlatform.WindowApp.Services;
+using static System.Collections.Specialized.BitVector32;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
@@ -17,8 +18,12 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
         {
             List<SectionResponseModel> model = new List<SectionResponseModel>();
             var db = new DatabaseService();
+            var parameter = new[]
+           {
+                new SqlParameter("@scode", code),
+            };
             var sectionList = db.Query<SectionResponseModel>(
-               QueryService.LoadSection());
+               QueryService.LoadSection(), parameter);
             if (sectionList is not null && sectionList.Count > 0)
             {
                 model.AddRange(sectionList);
@@ -26,7 +31,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
             return model;
         }
 
-        public static LessonsResponseModel LoadLessons(string sectionCode,int sectionId)
+        public static LessonsResponseModel LoadLessons(string sectionCode, int sectionId)
         {
             LessonsResponseModel model = new LessonsResponseModel();
             var db = new DatabaseService();
@@ -45,7 +50,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Lessons
 
         }
 
-        public static LessonContentsResponseModel LoadLessonContent(string lessonCode,int lessonId)
+        public static LessonContentsResponseModel LoadLessonContent(string lessonCode, int lessonId)
         {
             LessonContentsResponseModel model = new LessonContentsResponseModel();
             var db = new DatabaseService();

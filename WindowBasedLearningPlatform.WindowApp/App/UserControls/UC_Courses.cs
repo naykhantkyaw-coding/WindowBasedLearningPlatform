@@ -80,7 +80,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             lblIcon.Location = new Point(20, 20);
 
             if (title == "C#") lblIcon.BackColor = Color.FromArgb(104, 33, 122);
-            else if (title == "Python") lblIcon.BackColor = Color.FromArgb(55, 118, 171);
+            else if (title == "Java") lblIcon.BackColor = Color.FromArgb(55, 118, 171);
             else lblIcon.BackColor = Color.FromArgb(231, 111, 0);
 
             card.Controls.Add(lblIcon);

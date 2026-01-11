@@ -20,7 +20,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
 
         public static string LoadSection()
         {
-            return "SELECT SectionId,SectionCode,SectionName FROM Tbl_Sections ORDER BY SortOrder";
+            return "SELECT SectionId,SectionCode,SectionName FROM Tbl_Sections WHERE SectionCode = @scode ORDER BY SortOrder";
         }
 
         public static string LoadLesson()
