@@ -104,7 +104,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
 
             //    UC_LessonViewer lessonViewer = new UC_LessonViewer(languageName);
 
-                //4.Switch the main view to show the lessons
+            //4.Switch the main view to show the lessons
 
 
             //    ShowPage(lessonViewer);
@@ -115,19 +115,18 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             // 5.Show the courses list initially
             //  ShowPage(coursesPage);
 
+            UC_Courses coursesPage = new UC_Courses();
+            coursesPage.CourseSelected += (s, languageName) =>
+            {
+                LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
+                ShowPage(lessons);
             };
-
-            //5.Show the courses list initially
             ShowPage(coursesPage);
 
-            //UC_Courses coursesPage = new UC_Courses();
-            //coursesPage.CourseSelected += (s, languageName) =>
-            //{
-            //    LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
-            //    ShowPage(lessons);
-            //};
-            //ShowPage(coursesPage);
         }
+
+
+
         private void btn_profile_Click(object sender, EventArgs e)
         {
             ShowPage(new ProfileUserControl(userModel));
