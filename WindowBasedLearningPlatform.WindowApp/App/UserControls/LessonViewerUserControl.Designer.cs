@@ -33,6 +33,7 @@
             lessonsPanel = new Panel();
             titlepanel = new Panel();
             lessonsWebView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            QuizButton = new Button();
             menuPanel.SuspendLayout();
             lessonsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lessonsWebView).BeginInit();
@@ -41,11 +42,13 @@
             // menuPanel
             // 
             menuPanel.BackColor = Color.FromArgb(31, 41, 55);
+            menuPanel.Controls.Add(QuizButton);
             menuPanel.Controls.Add(btn_menuTitle);
             menuPanel.Dock = DockStyle.Left;
             menuPanel.Location = new Point(0, 0);
+            menuPanel.Margin = new Padding(3, 2, 3, 2);
             menuPanel.Name = "menuPanel";
-            menuPanel.Size = new Size(219, 908);
+            menuPanel.Size = new Size(192, 681);
             menuPanel.TabIndex = 0;
             // 
             // btn_menuTitle
@@ -57,8 +60,9 @@
             btn_menuTitle.ForeColor = Color.White;
             btn_menuTitle.ImageAlign = ContentAlignment.MiddleLeft;
             btn_menuTitle.Location = new Point(0, 0);
+            btn_menuTitle.Margin = new Padding(3, 2, 3, 2);
             btn_menuTitle.Name = "btn_menuTitle";
-            btn_menuTitle.Size = new Size(219, 77);
+            btn_menuTitle.Size = new Size(192, 58);
             btn_menuTitle.TabIndex = 16;
             btn_menuTitle.UseVisualStyleBackColor = false;
             // 
@@ -67,17 +71,19 @@
             lessonsPanel.Controls.Add(titlepanel);
             lessonsPanel.Controls.Add(lessonsWebView);
             lessonsPanel.Dock = DockStyle.Fill;
-            lessonsPanel.Location = new Point(219, 0);
+            lessonsPanel.Location = new Point(192, 0);
+            lessonsPanel.Margin = new Padding(3, 2, 3, 2);
             lessonsPanel.Name = "lessonsPanel";
-            lessonsPanel.Size = new Size(827, 908);
+            lessonsPanel.Size = new Size(723, 681);
             lessonsPanel.TabIndex = 1;
             // 
             // titlepanel
             // 
             titlepanel.Dock = DockStyle.Top;
             titlepanel.Location = new Point(0, 0);
+            titlepanel.Margin = new Padding(3, 2, 3, 2);
             titlepanel.Name = "titlepanel";
-            titlepanel.Size = new Size(827, 74);
+            titlepanel.Size = new Size(723, 56);
             titlepanel.TabIndex = 1;
             // 
             // lessonsWebView
@@ -87,20 +93,31 @@
             lessonsWebView.DefaultBackgroundColor = Color.White;
             lessonsWebView.Dock = DockStyle.Fill;
             lessonsWebView.Location = new Point(0, 0);
+            lessonsWebView.Margin = new Padding(3, 2, 3, 2);
             lessonsWebView.Name = "lessonsWebView";
-            lessonsWebView.Size = new Size(827, 908);
+            lessonsWebView.Size = new Size(723, 681);
             lessonsWebView.TabIndex = 0;
             lessonsWebView.ZoomFactor = 1D;
             // 
+            // QuizButton
+            // 
+            QuizButton.Location = new Point(3, 584);
+            QuizButton.Name = "QuizButton";
+            QuizButton.Size = new Size(186, 23);
+            QuizButton.TabIndex = 2;
+            QuizButton.Text = "Take Quiz";
+            QuizButton.UseVisualStyleBackColor = true;
+            // 
             // LessonViewerUserControl
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 23, 42);
             Controls.Add(lessonsPanel);
             Controls.Add(menuPanel);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "LessonViewerUserControl";
-            Size = new Size(1046, 908);
+            Size = new Size(915, 681);
             menuPanel.ResumeLayout(false);
             lessonsPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)lessonsWebView).EndInit();
@@ -114,5 +131,6 @@
         private Microsoft.Web.WebView2.WinForms.WebView2 lessonsWebView;
         private Button btn_menuTitle;
         private Panel titlepanel;
+        private Button QuizButton;
     }
 }
