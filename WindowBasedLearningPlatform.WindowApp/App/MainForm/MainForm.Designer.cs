@@ -39,7 +39,6 @@
             btn_profile = new Button();
             btn_Courses = new Button();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            btnQuiz = new Button();
             panelContent.SuspendLayout();
             panelSidebar.SuspendLayout();
             SuspendLayout();
@@ -78,7 +77,6 @@
             // 
             panelSidebar.ColorBottom = Color.FromArgb(26, 5, 16);
             panelSidebar.ColorTop = Color.FromArgb(144, 12, 63);
-            panelSidebar.Controls.Add(btnQuiz);
             panelSidebar.Controls.Add(btn_Title);
             panelSidebar.Controls.Add(btn_SignOut);
             panelSidebar.Controls.Add(btn_dashboard);
@@ -181,23 +179,6 @@
             btn_Courses.UseVisualStyleBackColor = false;
             btn_Courses.Click += btn_courses_Click;
             // 
-            // btnQuiz
-            // 
-            btnQuiz.BackColor = Color.Transparent;
-            btnQuiz.Cursor = Cursors.Hand;
-            btnQuiz.FlatStyle = FlatStyle.Popup;
-            btnQuiz.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnQuiz.ForeColor = Color.White;
-            btnQuiz.Image = (Image)resources.GetObject("btnQuiz.Image");
-            btnQuiz.ImageAlign = ContentAlignment.MiddleLeft;
-            btnQuiz.Location = new Point(0, 249);
-            btnQuiz.Margin = new Padding(3, 2, 3, 2);
-            btnQuiz.Name = "btnQuiz";
-            btnQuiz.Size = new Size(269, 58);
-            btnQuiz.TabIndex = 16;
-            btnQuiz.Text = "Quiz";
-            btnQuiz.UseVisualStyleBackColor = false;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -226,6 +207,5 @@
         private Button btn_Courses;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Button btn_Title;
-        private Button btnQuiz;
     }
 }
