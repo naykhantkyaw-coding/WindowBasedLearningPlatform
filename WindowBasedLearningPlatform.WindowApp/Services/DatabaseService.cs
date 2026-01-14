@@ -121,6 +121,51 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             }
             return quizzes;
         }
+        // In DatabaseService.cs
+
+        public static void SaveQuizProgress(int studentId, int lessonId, int score)
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationService.GetDbConnection()))
+            {
+                try
+                {
+                    conn.Open();
+                    // Check if record exists
+                    string checkQuery = "SELECT Count(*) FROM Tbl_ProgressRecords WHERE StudentId = @sid AND LessonId = @lid";
+                    SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                    checkCmd.Parameters.AddWithValue("@sid", studentId);
+                    checkCmd.Parameters.AddWithValue("@lid", lessonId);
+
+                    int count = (int)checkCmd.ExecuteScalar();
+
+                    if (count > 0)
+                    {
+                        // Update existing
+                        string updateQuery = "UPDATE Tbl_ProgressRecords SET QuizScore = @score, LastAccessed = GETDATE() WHERE StudentId = @sid AND LessonId = @lid";
+                        SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
+                        updateCmd.Parameters.AddWithValue("@score", score);
+                        updateCmd.Parameters.AddWithValue("@sid", studentId);
+                        updateCmd.Parameters.AddWithValue("@lid", lessonId);
+                        updateCmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        // Insert new
+                        string insertQuery = "INSERT INTO Tbl_ProgressRecords (StudentId, LessonId, QuizScore, IsCompleted, LastAccessed) VALUES (@sid, @lid, @score, 1, GETDATE())";
+                        SqlCommand insertCmd = new SqlCommand(insertQuery, conn);
+                        insertCmd.Parameters.AddWithValue("@score", score);
+                        insertCmd.Parameters.AddWithValue("@sid", studentId);
+                        insertCmd.Parameters.AddWithValue("@lid", lessonId);
+                        insertCmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error
+                    System.Diagnostics.Debug.WriteLine("Error saving progress: " + ex.Message);
+                }
+            }
+        }
     }
     }
 

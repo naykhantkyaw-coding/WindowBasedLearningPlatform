@@ -20,6 +20,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private RadioButton rbA, rbB, rbC, rbD;
         private Button btnSubmit;
         private Label lblResult;
+        private int _studentId;
+        private string lessonId;
 
         public UC_QuizViewer(int lessonId)
         {
@@ -27,6 +29,11 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             _lessonId = lessonId;
             SetupUI();
             LoadQuestions();
+        }
+
+        public UC_QuizViewer(string lessonId)
+        {
+            this.lessonId = lessonId;
         }
 
         private void SetupUI()
@@ -171,14 +178,26 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             btnSubmit.Text = "Next Question";
         }
 
+        // In UC_QuizViewer.cs
+
+        // Update FinishQuiz method
         private void FinishQuiz()
         {
-            lblQuestion.Text = $"Quiz Completed!\nScore: {_score} / {_questions.Count}";
-            rbA.Visible = rbB.Visible = rbC.Visible = rbD.Visible = false;
-            btnSubmit.Visible = false;
-            lblResult.Text = "";
+            // ... display score logic ...
+            lblResult.Text = $"Quiz Finished! Score: {_score}/{_questions.Count}";
 
-            // TODO: Save score to database here
+            // SAVE TO DB
+            // Assuming you have access to studentId (passed in constructor)
+            DatabaseService.SaveQuizProgress(_studentId, _lessonId, _score);
+
+            // Add a "Back to Lessons" button or event
+            Button btnBack = new Button();
+            btnBack.Text = "Back to Lessons";
+            btnBack.Click += (s, e) => {
+                // Trigger an event to go back, e.g. CloseRequested?.Invoke(this, EventArgs.Empty);
+            };
+            this.Controls.Add(btnBack);
+            btnBack.BringToFront();
         }
     }
 }

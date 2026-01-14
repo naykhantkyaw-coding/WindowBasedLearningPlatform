@@ -120,17 +120,21 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             {
                 LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
                 // NEW: Listen for Quiz Request from the Lesson Viewer
-                lessons.QuizRequested += (senderViewer, lang) =>
+                lessons.QuizRequested += (senderViewer, lessonId) =>
                 {
-                    // When "Take Quiz" is clicked, open the Quiz Viewer
-                    // We might need to pass the LessonId or Language to the QuizViewer
-                    // For now, let's assume we pass the language string or map it to an ID.
-                    // You'll need to update UC_QuizViewer constructor to accept what you need.
+                    // Use the REAL lessonId passed from the viewer
+                    // No more dummyLessonId = 1!
 
-                    // Example: Get first lesson ID for language (simplified) or pass lang string
-                    int dummyLessonId = 1;
-                    UC_QuizViewer quizPage = new UC_QuizViewer(dummyLessonId);
+                    // Note: 'lessonId' here comes from the event argument
+                    // If the event is defined as EventHandler<string>, you'll get a compile error here.
+                    // You MUST update LessonViewerUserControl to use EventHandler<int>.
+
+                    // Assuming lessonId is int:
+                    UC_QuizViewer quizPage = new UC_QuizViewer(lessonId);
                     ShowPage(quizPage);
+
+                    // DEBUG: If you are stuck with string for now and can't change the UserControl:
+                    // int id = GetLessonIdFromDatabase(lessonId); // You'd need a lookup helper
                 };
                 ShowPage(lessons);
             };
