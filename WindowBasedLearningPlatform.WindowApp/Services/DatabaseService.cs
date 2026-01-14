@@ -65,19 +65,26 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         // for insert,update,delete
         public int Execute(string query, params SqlParameter[] parameters)
         {
-            string connectionString = ConfigurationService.GetDbConnection();
-            SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-            SqlCommand command = new SqlCommand(query, connection);
-
-            if (parameters is not null)
+            try
             {
-                command.Parameters.AddRange(parameters);
-            }
+                string connectionString = ConfigurationService.GetDbConnection();
+                SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
 
-            var result = command.ExecuteNonQuery();
-            connection.Close();
-            return result;
+                if (parameters is not null)
+                {
+                    command.Parameters.AddRange(parameters);
+                }
+
+                var result = command.ExecuteNonQuery();
+                connection.Close();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
             public static List<QuizQuestion> GetQuizzesForLesson(int lessonId)

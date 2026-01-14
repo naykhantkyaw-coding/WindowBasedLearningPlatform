@@ -32,5 +32,20 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         {
             return "SELECT ContentType, ContentBody FROM Tbl_LessonContents WHERE LessonCode = @lcode and LessonId =@lid";
         }
+
+        public static string UpdateProgress()
+        {
+            return "UPDATE Tbl_UserLessonProgress SET IsRead = 1 WHERE LessonId=@lessonId AND UserId=@userId";
+        }
+        public static string SelectProgress()
+        {
+            return "Select * from Tbl_UserLessonProgress WHERE LessonId=@lessonId AND UserId=@userId";
+        }
+
+        public static string InsertProgress()
+        {
+            return @"INSERT INTO Tbl_UserLessonProgress (UserId,LessonId ,IsRead, IsCompleted, CompletedDate)
+                        VALUES (@userId,@lessonId,1,0 ,GETDATE())";
+        }
     }
 }
