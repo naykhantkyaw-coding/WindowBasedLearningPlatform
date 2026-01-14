@@ -119,11 +119,49 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             coursesPage.CourseSelected += (s, languageName) =>
             {
                 LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
+                // NEW: Listen for Quiz Request from the Lesson Viewer
+                lessons.QuizRequested += (senderViewer, lang) =>
+                {
+                    // When "Take Quiz" is clicked, open the Quiz Viewer
+                    // We might need to pass the LessonId or Language to the QuizViewer
+                    // For now, let's assume we pass the language string or map it to an ID.
+                    // You'll need to update UC_QuizViewer constructor to accept what you need.
+
+                    // Example: Get first lesson ID for language (simplified) or pass lang string
+                    int dummyLessonId = 1;
+                    UC_QuizViewer quizPage = new UC_QuizViewer(dummyLessonId);
+                    ShowPage(quizPage);
+                };
                 ShowPage(lessons);
             };
             ShowPage(coursesPage);
 
         }
+        /*
+             {
+                 UC_LessonViewer lessonViewer = new UC_LessonViewer(languageName);
+                 
+                 // NEW: Listen for Quiz Request from the Lesson Viewer
+                 lessonViewer.QuizRequested += (senderViewer, lang) => 
+                 {
+                     // When "Take Quiz" is clicked, open the Quiz Viewer
+                     // We might need to pass the LessonId or Language to the QuizViewer
+                     // For now, let's assume we pass the language string or map it to an ID.
+                     // You'll need to update UC_QuizViewer constructor to accept what you need.
+                     
+                     // Example: Get first lesson ID for language (simplified) or pass lang string
+                     int dummyLessonId = 1; 
+                     UC_QuizViewer quizPage = new UC_QuizViewer(dummyLessonId); 
+                     ShowPage(quizPage);
+                 };
+
+                 ShowPage(lessonViewer);
+             };
+
+             ShowPage(coursesPage);
+        }
+
+*/
 
 
 

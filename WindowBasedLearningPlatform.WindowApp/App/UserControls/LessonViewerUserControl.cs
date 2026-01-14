@@ -20,6 +20,7 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Resources.ResXFileRef;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using System.Drawing;
 
 namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 {
@@ -31,6 +32,10 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private SplitContainer _layoutContainer;
         private UC_CodePlayground _activePlayground;
         private WebBrowser _contentBrowser;
+
+        // Changed to EventHandler to match standard patterns
+        public event EventHandler<string> QuizRequested;
+
         public LessonViewerUserControl(string language)
         {
             InitializeComponent();
@@ -40,29 +45,47 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             btn_menuTitle.Text = _language;
             LoadSidebar();
 
-            // 2. Practice Button (New!)
-            // We add it to the top (under title) or bottom. Let's put it at the bottom of the content panel
-            // so it's always accessible.
+            // --- Action Panel for Buttons ---
+            Panel actionPanel = new Panel();
+            actionPanel.Dock = DockStyle.Bottom;
+            actionPanel.Height = 50;
+            actionPanel.Padding = new Padding(10);
+            lessonsPanel.Controls.Add(actionPanel);
+
+            // 1. Practice Button
             Button btnPractice = new Button();
             btnPractice.Text = "💻 Open Code Playground";
             btnPractice.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
-            btnPractice.BackColor = ColorTranslator.FromHtml("#fdd23f"); // Brand Yellow
+            btnPractice.BackColor = Color.Orange; // Orange for practice
             btnPractice.ForeColor = Color.Black;
             btnPractice.FlatStyle = FlatStyle.Flat;
             btnPractice.FlatAppearance.BorderSize = 0;
-            btnPractice.Height = 40;
-            btnPractice.Dock = DockStyle.Bottom;
+            btnPractice.Dock = DockStyle.Left; // Dock left
+            btnPractice.Width = 200;
             btnPractice.Cursor = Cursors.Hand;
-            btnPractice.Click += BtnPractice_Click;
-            lessonsPanel.Controls.Add(btnPractice);
+            btnPractice.Click += BtnPractice_Click; // Renamed handler for clarity
+            actionPanel.Controls.Add(btnPractice);
 
+            // 2. Take Quiz Button (The code you selected)
+            Button btnQuiz = new Button();
+            btnQuiz.Text = "📝 Take Quiz";
+            btnQuiz.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            btnQuiz.BackColor = ColorTranslator.FromHtml("#fdd23f"); // Brand Yellow
+            btnQuiz.ForeColor = Color.Black;
+            btnQuiz.FlatStyle = FlatStyle.Flat;
+            btnQuiz.FlatAppearance.BorderSize = 0;
+            btnQuiz.Dock = DockStyle.Right; // Dock right
+            btnQuiz.Width = 150;
+            btnQuiz.Cursor = Cursors.Hand;
+            btnQuiz.Click += (s, e) => QuizRequested?.Invoke(this, _language); // Fire event!
+            actionPanel.Controls.Add(btnQuiz);
         }
 
         public void SetMarkdownContent(string markdownContent)
         {
             if (_isWebViewInitialized)
             {
-                LoadMarkdownContent();
+                LoadMarkdownContent(markdownContent); // Pass content
             }
         }
 
@@ -205,17 +228,21 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             }
         }
 
+        // Renamed from BtnQuiz_Click to BtnPractice_Click to match logic
         private void BtnPractice_Click(object sender, EventArgs e)
         {
-            Panel contentPanel = new Panel();
-            contentPanel = _layoutContainer.Panel2;
+            // Assuming lessonsPanel is the container for content (based on your previous code)
+            // Or maybe it should be lessonsWebView's parent? 
+            // The previous code added btnPractice to 'lessonsPanel'.
+
+            Panel contentPanel = lessonsPanel;
 
             // If playground is already open, close it (toggle)
             if (_activePlayground != null && contentPanel.Controls.Contains(_activePlayground))
             {
                 contentPanel.Controls.Remove(_activePlayground);
                 _activePlayground = null;
-                _contentBrowser.Visible = true; // Show lesson again
+                lessonsWebView.Visible = true; // Show lesson again
                 ((Button)sender).Text = "💻 Open Code Playground";
             }
             else
@@ -225,9 +252,9 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                 _activePlayground.Dock = DockStyle.Fill;
 
                 // Hide browser temporarily
-                _contentBrowser.Visible = false;
+                lessonsWebView.Visible = false;
 
-                // Add playground to panel (it will fill the space between title and button)
+                // Add playground to panel
                 contentPanel.Controls.Add(_activePlayground);
                 _activePlayground.BringToFront();
 
@@ -238,7 +265,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private string GenerateHtmlContent(string markdownContent, string showdownJs)
         {
             // Escape the markdown content for JavaScript
-            string escapedMarkdown = markdownContent
+            string escapedMarkdown = (markdownContent ?? "")
                 .Replace("\\", "\\\\")
                 .Replace("`", "\\`")
                 .Replace("${", "\\${");
@@ -397,8 +424,3 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 
     }
 }
-
-
-
-
-

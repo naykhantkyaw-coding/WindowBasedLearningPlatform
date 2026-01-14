@@ -39,6 +39,7 @@
             btn_profile = new Button();
             btn_Courses = new Button();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            btnQuiz = new Button();
             panelContent.SuspendLayout();
             panelSidebar.SuspendLayout();
             SuspendLayout();
@@ -48,32 +49,36 @@
             panelContent.Controls.Add(progressBar1);
             panelContent.Controls.Add(panel1);
             panelContent.Dock = DockStyle.Fill;
-            panelContent.Location = new Point(307, 0);
+            panelContent.Location = new Point(269, 0);
+            panelContent.Margin = new Padding(3, 2, 3, 2);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(1046, 908);
+            panelContent.Size = new Size(915, 681);
             panelContent.TabIndex = 2;
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(555, 35);
+            progressBar1.Location = new Point(486, 26);
+            progressBar1.Margin = new Padding(3, 2, 3, 2);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(101, 23);
+            progressBar1.Size = new Size(88, 17);
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 1;
             // 
             // panel1
             // 
             panel1.BackColor = Color.White;
-            panel1.Location = new Point(432, 137);
+            panel1.Location = new Point(378, 103);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Padding = new Padding(21, 20, 21, 20);
-            panel1.Size = new Size(299, 149);
+            panel1.Padding = new Padding(18, 15, 18, 15);
+            panel1.Size = new Size(262, 112);
             panel1.TabIndex = 0;
             // 
             // panelSidebar
             // 
             panelSidebar.ColorBottom = Color.FromArgb(26, 5, 16);
             panelSidebar.ColorTop = Color.FromArgb(144, 12, 63);
+            panelSidebar.Controls.Add(btnQuiz);
             panelSidebar.Controls.Add(btn_Title);
             panelSidebar.Controls.Add(btn_SignOut);
             panelSidebar.Controls.Add(btn_dashboard);
@@ -81,9 +86,8 @@
             panelSidebar.Controls.Add(btn_Courses);
             panelSidebar.Dock = DockStyle.Left;
             panelSidebar.Location = new Point(0, 0);
-            panelSidebar.Margin = new Padding(3, 4, 3, 4);
             panelSidebar.Name = "panelSidebar";
-            panelSidebar.Size = new Size(307, 908);
+            panelSidebar.Size = new Size(269, 681);
             panelSidebar.TabIndex = 2;
             // 
             // btn_Title
@@ -96,8 +100,9 @@
             btn_Title.Image = (Image)resources.GetObject("btn_Title.Image");
             btn_Title.ImageAlign = ContentAlignment.MiddleLeft;
             btn_Title.Location = new Point(0, 0);
+            btn_Title.Margin = new Padding(3, 2, 3, 2);
             btn_Title.Name = "btn_Title";
-            btn_Title.Size = new Size(307, 77);
+            btn_Title.Size = new Size(269, 58);
             btn_Title.TabIndex = 15;
             btn_Title.Text = "CODE LEARNER";
             btn_Title.UseVisualStyleBackColor = false;
@@ -112,9 +117,10 @@
             btn_SignOut.ForeColor = Color.White;
             btn_SignOut.Image = (Image)resources.GetObject("btn_SignOut.Image");
             btn_SignOut.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_SignOut.Location = new Point(0, 831);
+            btn_SignOut.Location = new Point(0, 623);
+            btn_SignOut.Margin = new Padding(3, 2, 3, 2);
             btn_SignOut.Name = "btn_SignOut";
-            btn_SignOut.Size = new Size(307, 77);
+            btn_SignOut.Size = new Size(269, 58);
             btn_SignOut.TabIndex = 14;
             btn_SignOut.Text = "Sign Out";
             btn_SignOut.UseVisualStyleBackColor = false;
@@ -130,9 +136,10 @@
             btn_dashboard.ForeColor = Color.White;
             btn_dashboard.Image = (Image)resources.GetObject("btn_dashboard.Image");
             btn_dashboard.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_dashboard.Location = new Point(0, 83);
+            btn_dashboard.Location = new Point(0, 62);
+            btn_dashboard.Margin = new Padding(3, 2, 3, 2);
             btn_dashboard.Name = "btn_dashboard";
-            btn_dashboard.Size = new Size(307, 77);
+            btn_dashboard.Size = new Size(269, 58);
             btn_dashboard.TabIndex = 12;
             btn_dashboard.Text = "Dashboard";
             btn_dashboard.UseVisualStyleBackColor = false;
@@ -147,9 +154,10 @@
             btn_profile.ForeColor = Color.White;
             btn_profile.Image = (Image)resources.GetObject("btn_profile.Image");
             btn_profile.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_profile.Location = new Point(0, 166);
+            btn_profile.Location = new Point(0, 124);
+            btn_profile.Margin = new Padding(3, 2, 3, 2);
             btn_profile.Name = "btn_profile";
-            btn_profile.Size = new Size(307, 77);
+            btn_profile.Size = new Size(269, 58);
             btn_profile.TabIndex = 13;
             btn_profile.Text = "Profile";
             btn_profile.UseVisualStyleBackColor = false;
@@ -164,23 +172,40 @@
             btn_Courses.ForeColor = Color.White;
             btn_Courses.Image = (Image)resources.GetObject("btn_Courses.Image");
             btn_Courses.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Courses.Location = new Point(0, 249);
+            btn_Courses.Location = new Point(0, 187);
+            btn_Courses.Margin = new Padding(3, 2, 3, 2);
             btn_Courses.Name = "btn_Courses";
-            btn_Courses.Size = new Size(307, 77);
+            btn_Courses.Size = new Size(269, 58);
             btn_Courses.TabIndex = 11;
             btn_Courses.Text = "Courses";
             btn_Courses.UseVisualStyleBackColor = false;
             btn_Courses.Click += btn_courses_Click;
             // 
+            // btnQuiz
+            // 
+            btnQuiz.BackColor = Color.Transparent;
+            btnQuiz.Cursor = Cursors.Hand;
+            btnQuiz.FlatStyle = FlatStyle.Popup;
+            btnQuiz.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnQuiz.ForeColor = Color.White;
+            btnQuiz.Image = (Image)resources.GetObject("btnQuiz.Image");
+            btnQuiz.ImageAlign = ContentAlignment.MiddleLeft;
+            btnQuiz.Location = new Point(0, 249);
+            btnQuiz.Margin = new Padding(3, 2, 3, 2);
+            btnQuiz.Name = "btnQuiz";
+            btnQuiz.Size = new Size(269, 58);
+            btnQuiz.TabIndex = 16;
+            btnQuiz.Text = "Quiz";
+            btnQuiz.UseVisualStyleBackColor = false;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightGray;
-            ClientSize = new Size(1353, 908);
+            ClientSize = new Size(1184, 681);
             Controls.Add(panelContent);
             Controls.Add(panelSidebar);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Learning Platform";
@@ -201,5 +226,6 @@
         private Button btn_Courses;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private Button btn_Title;
+        private Button btnQuiz;
     }
 }

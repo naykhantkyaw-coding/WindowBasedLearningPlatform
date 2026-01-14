@@ -6,11 +6,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WindowBasedLearningPlatform.WindowApp.Models.QuizModel;
 
 namespace WindowBasedLearningPlatform.WindowApp.Services
 {
+
+
+
     public class DatabaseService
     {
+
+
+
         // for select data
         public List<T> Query<T>(string query, params SqlParameter[] parameters)
         {
@@ -72,5 +79,48 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             connection.Close();
             return result;
         }
+
+            public static List<QuizQuestion> GetQuizzesForLesson(int lessonId)
+        {
+            var quizzes = new List<QuizQuestion>();
+
+            // Ensure you use your actual connection string logic
+            using (SqlConnection conn = new SqlConnection(ConfigurationService.GetDbConnection()))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT * FROM Tbl_QuizzData WHERE LessonID = @lid";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@lid", lessonId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                quizzes.Add(new QuizQuestion
+                                {
+                                    QuizID = (int)reader["QuizID"],
+                                    LessonID = (int)reader["LessonID"],
+                                    QuestionText = reader["QuestionText"].ToString(),
+                                    OptionA = reader["OptionA"].ToString(),
+                                    OptionB = reader["OptionB"].ToString(),
+                                    OptionC = reader["OptionC"].ToString(),
+                                    OptionD = reader["OptionD"].ToString(),
+                                    CorrectOption = reader["CorrectOption"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log error
+                    System.Diagnostics.Debug.WriteLine("Quiz Fetch Error: " + ex.Message);
+                }
+            }
+            return quizzes;
+        }
     }
-}
+    }
+
