@@ -39,7 +39,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private bool _lessonReadTriggered = false;
 
         // Changed to EventHandler to match standard patterns
-        public event EventHandler<string> QuizRequested;
+        public event EventHandler<int> QuizRequested;
 
         public LessonViewerUserControl(string language, UserResponseModel model)
         {
@@ -83,7 +83,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             btnQuiz.Dock = DockStyle.Right; // Dock right
             btnQuiz.Width = 150;
             btnQuiz.Cursor = Cursors.Hand;
-            btnQuiz.Click += (s, e) => QuizRequested?.Invoke(this, _language); // Fire event!
+            btnQuiz.Click += (s, e) => QuizRequested?.Invoke(this, _currentLessonsId); // Fire event!
             actionPanel.Controls.Add(btnQuiz);
         }
 
