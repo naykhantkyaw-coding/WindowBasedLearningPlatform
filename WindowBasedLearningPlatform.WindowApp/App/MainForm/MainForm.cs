@@ -119,7 +119,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             UC_Courses coursesPage = new UC_Courses();
             coursesPage.CourseSelected += (s, languageName) =>
             {
-                LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
+                LessonViewerUserControl lessons = new LessonViewerUserControl(languageName,userModel);
                 // NEW: Listen for Quiz Request from the Lesson Viewer
                 lessons.QuizRequested += (senderViewer, lang) =>
                 {

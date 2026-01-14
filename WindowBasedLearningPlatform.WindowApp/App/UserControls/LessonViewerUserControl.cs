@@ -38,12 +38,10 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private bool _webEventsHooked = false;
         private bool _lessonReadTriggered = false;
 
-        public LessonViewerUserControl(string language, UserResponseModel model)
-
         // Changed to EventHandler to match standard patterns
         public event EventHandler<string> QuizRequested;
 
-        public LessonViewerUserControl(string language)
+        public LessonViewerUserControl(string language, UserResponseModel model)
         {
             InitializeComponent();
             InitializeAsync();
