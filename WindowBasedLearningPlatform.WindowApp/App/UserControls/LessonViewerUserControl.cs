@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.Features.Lessons;
 using WindowBasedLearningPlatform.WindowApp.Models.LessonsModel;
+using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 using static System.Collections.Specialized.BitVector32;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Resources.ResXFileRef;
@@ -31,13 +32,19 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private SplitContainer _layoutContainer;
         private UC_CodePlayground _activePlayground;
         private WebBrowser _contentBrowser;
-        public LessonViewerUserControl(string language)
+        private int _currentLessonsId;
+        private UserResponseModel _userResponseModel = new UserResponseModel();
+        private bool _webEventsHooked = false;
+        private bool _lessonReadTriggered = false;
+
+        public LessonViewerUserControl(string language, UserResponseModel model)
         {
             InitializeComponent();
             InitializeAsync();
             menuPanel.AutoScroll = true;
             _language = language;
             btn_menuTitle.Text = _language;
+            _userResponseModel = model;
             LoadSidebar();
 
             // 2. Practice Button (New!)
@@ -72,6 +79,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             {
                 await lessonsWebView.EnsureCoreWebView2Async(null);
                 _isWebViewInitialized = true;
+                SetupWebViewEvents();
             }
             catch (Exception ex)
             {
@@ -144,12 +152,13 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             LoadLessons(data.SectionCode, data.SectionId);
         }
 
-        private void LoadLessons(string sectionCode, int sectionId)
+        private async void LoadLessons(string sectionCode, int sectionId)
         {
             titlepanel.Controls.Clear();
+            _lessonReadTriggered = false;
 
             var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
-
+            _currentLessonsId = lessons.LessonId;
             var lbl = new Label()
             {
                 Text = $"{lessons.LessonTitle}",
@@ -161,9 +170,80 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             titlepanel.Controls.Add(lbl);
 
             var lessonsContent = SelectedLessons.LoadLessonContent(lessons.LessonCode, lessons.LessonId);
-            InitializeAsync();
+            //InitializeAsync();
             LoadMarkdownContent(lessonsContent.ContentBody);
         }
+
+        private void SetupWebViewEvents()
+        {
+            if (_webEventsHooked) return;
+            _webEventsHooked = true;
+
+            lessonsWebView.CoreWebView2.NavigationCompleted += (s, e) =>
+            {
+                InjectScrollScript();
+            };
+
+            lessonsWebView.CoreWebView2.WebMessageReceived += (s, e) =>
+            {
+                var message = e.TryGetWebMessageAsString();
+                if (message == "LessonRead")
+                {
+                    HandleLessonRead();
+                }
+            };
+        }
+
+
+
+        private void HandleLessonRead()
+        {
+            if (_lessonReadTriggered) return;
+            _lessonReadTriggered = true;
+
+            UserProgress.UpdateUserProgress(_currentLessonsId, _userResponseModel.UserId);
+            MessageBox.Show("Scroll bottom reached!");
+        }
+
+
+        private void InjectScrollScript()
+        {
+            lessonsWebView.ExecuteScriptAsync(@"
+        function notifyRead() {
+            chrome.webview.postMessage('LessonRead');
+        }
+
+        let done=false;
+
+        function checkAutoComplete() {
+            const bodyHeight = document.body.scrollHeight;
+            const viewHeight = window.innerHeight;
+
+            // content fits screen, no scroll needed
+            if (bodyHeight <= viewHeight) {
+                if (!done) {
+                    done = true;
+                    notifyRead();
+                }
+            }
+        }
+
+        document.addEventListener('scroll', () => {
+            if(done) return;
+            const scrolled = window.scrollY + window.innerHeight;
+            const bottom = document.body.scrollHeight;
+            if (scrolled >= bottom - 10) {
+                done = true;
+                notifyRead();
+            }
+        });
+
+        // check after rendering finishes
+        setTimeout(checkAutoComplete, 300);
+    ");
+        }
+
+
 
         private void LoadMarkdownContent(string content = null)
         {

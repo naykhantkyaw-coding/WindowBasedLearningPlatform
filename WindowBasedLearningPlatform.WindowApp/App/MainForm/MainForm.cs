@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.App.UserControls;
 using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
@@ -118,7 +119,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             UC_Courses coursesPage = new UC_Courses();
             coursesPage.CourseSelected += (s, languageName) =>
             {
-                LessonViewerUserControl lessons = new LessonViewerUserControl(languageName);
+                LessonViewerUserControl lessons = new LessonViewerUserControl(languageName, userModel);
                 ShowPage(lessons);
             };
             ShowPage(coursesPage);
