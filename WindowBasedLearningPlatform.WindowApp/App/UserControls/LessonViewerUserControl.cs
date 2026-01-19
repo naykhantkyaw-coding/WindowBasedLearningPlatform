@@ -216,8 +216,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             };
         }
 
-
-
         private void HandleLessonRead()
         {
             if (_lessonReadTriggered) return;

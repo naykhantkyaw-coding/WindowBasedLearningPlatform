@@ -10,14 +10,8 @@ using WindowBasedLearningPlatform.WindowApp.Models.QuizModel;
 
 namespace WindowBasedLearningPlatform.WindowApp.Services
 {
-
-
-
     public class DatabaseService
     {
-
-
-
         // for select data
         public List<T> Query<T>(string query, params SqlParameter[] parameters)
         {
