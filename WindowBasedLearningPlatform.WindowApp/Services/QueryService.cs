@@ -35,17 +35,42 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
 
         public static string UpdateProgress()
         {
-            return "UPDATE Tbl_UserLessonProgress SET IsRead = 1 WHERE LessonId=@lessonId AND UserId=@userId";
+            return "UPDATE Tbl_UserLessonProgress SET IsRead = 1 WHERE LessonId=@lessonId AND UserId=@userId AND SectionCode=@code";
         }
         public static string SelectProgress()
         {
-            return "Select * from Tbl_UserLessonProgress WHERE LessonId=@lessonId AND UserId=@userId";
+            return "Select * from Tbl_UserLessonProgress WHERE LessonId=@lessonId AND UserId=@userId AND SectionCode=@code";
         }
 
         public static string InsertProgress()
         {
-            return @"INSERT INTO Tbl_UserLessonProgress (UserId,LessonId ,IsRead, IsCompleted, CompletedDate)
-                        VALUES (@userId,@lessonId,1,0 ,GETDATE())";
+            return @"INSERT INTO Tbl_UserLessonProgress (UserId,LessonId ,IsRead, IsCompleted,SectionCode ,CompletedDate)
+                        VALUES (@userId,@lessonId,1,1,@code,GETDATE())";
+        }
+
+        public static string InsertTimeDuration()
+        {
+            return @"INSERT INTO Tbl_UserLessonTime (UserId, LessonId, MinutesLearned)
+            VALUES (@userId, @lessonId, @minutes)";
+        }
+
+        public static string SelectDuration()
+        {
+            return @"Select * from Tbl_UserLessonTime where UserId = @userId and LessonId = @lessonId";
+        }
+        public static string UpdateTimeDuration()
+        {
+            return "UPDATE Tbl_UserLessonTime SET MinutesLearned =@minutes  WHERE LessonId=@lessonId AND UserId=@userId";
+        }
+
+        public static string SelectLessonsCount()
+        {
+            return "select count(*) from Tbl_Lessons where SectionCode = @code";
+        }
+
+        public static string SelectLessonComplete()
+        {
+            return "select count(*) from Tbl_UserLessonProgress where UserId = @userId and SectionCode=@code and IsCompleted = 1";
         }
     }
 }

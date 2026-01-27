@@ -116,7 +116,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             // 5.Show the courses list initially
             //  ShowPage(coursesPage);
 
-            UC_Courses coursesPage = new UC_Courses();
+            UC_Courses coursesPage = new UC_Courses(userModel);
             coursesPage.CourseSelected += (s, languageName) =>
             {
                 LessonViewerUserControl lessons = new LessonViewerUserControl(languageName,userModel);

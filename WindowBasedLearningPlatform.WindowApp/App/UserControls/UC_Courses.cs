@@ -1,7 +1,10 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using System.Windows.Forms;
+using WindowBasedLearningPlatform.WindowApp.Features.Lessons;
+using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
 
 namespace WindowBasedLearningPlatform.WindowApp.App
 {
@@ -10,12 +13,18 @@ namespace WindowBasedLearningPlatform.WindowApp.App
         // 1. DEFINE THE EVENT
         // This event sends a string (the language name) back to MainForm
         public event EventHandler<string> CourseSelected;
+        private UserResponseModel _userResponseModel = new UserResponseModel();
+        Dictionary<string, int> courseProgress = new Dictionary<string, int>();
 
-        public UC_Courses()
+        public UC_Courses(UserResponseModel model)
         {
+            _userResponseModel = model;
             InitializeComponent();
             SetupUI();
             LoadCourses();
+            LoadProgress();
+            RefreshProgressBars();
+
         }
 
         private void SetupUI()
@@ -63,6 +72,25 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             }
         }
 
+        private void LoadProgress()
+        {
+            courseProgress["C#"] = UserProgress.ProgressBar(_userResponseModel.UserId, "C#");
+            //courseProgress["Python"] = UserProgress.ProgressBar(_userResponseModel.UserId, "Python");
+            courseProgress["Java"] = UserProgress.ProgressBar(_userResponseModel.UserId, "Java");
+        }
+
+        private void RefreshProgressBars()
+        {
+            foreach (var key in courseProgress.Keys)
+            {
+                var bar = this.Controls.Find($"pb_{key}", true).FirstOrDefault() as ProgressBar;
+                if (bar != null)
+                    bar.Value = courseProgress[key];
+            }
+        }
+
+
+
         private void AddCourseCard(FlowLayoutPanel parent, string title, string description, string iconText)
         {
             Panel card = new Panel();
@@ -99,9 +127,22 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             lblDesc.Text = description;
             lblDesc.Font = new Font("Segoe UI", 10, FontStyle.Regular);
             lblDesc.ForeColor = Color.Gray;
-            lblDesc.Location = new Point(20, 80);
+            lblDesc.Location = new Point(20, 70);
             lblDesc.Size = new Size(260, 40);
             card.Controls.Add(lblDesc);
+
+            // Progress Bar
+            ProgressBar progress = new ProgressBar();
+            progress.Name = $"pb_{title}";
+            progress.Minimum = 0;
+            progress.Maximum = 100;
+            int percent = courseProgress.ContainsKey(title) ? courseProgress[title] : 0;
+            progress.Value = percent;
+            progress.Step = 1;
+            progress.Size = new Size(240, 20);
+            progress.Location = new Point(20, 110);
+            progress.Style = ProgressBarStyle.Continuous;
+            card.Controls.Add(progress);
 
             // Start Button
             Button btnStart = new Button();
@@ -112,7 +153,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App
             btnStart.FlatAppearance.BorderSize = 0;
             btnStart.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             btnStart.Size = new Size(120, 35);
-            btnStart.Location = new Point(20, 130);
+            btnStart.Location = new Point(20, 140);
             btnStart.Cursor = Cursors.Hand;
 
             // 2. FIRE THE EVENT ON CLICK
