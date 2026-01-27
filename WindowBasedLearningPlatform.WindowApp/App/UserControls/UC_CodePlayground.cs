@@ -15,6 +15,11 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private RichTextBox _txtCodeInput;
         private TextBox _txtOutput;
         private Button _btnRun;
+        // NEW: Close Button
+        private Button _btnClose;
+
+        // NEW: Event to notify parent to close this control
+        public event EventHandler RequestClose;
 
         public UC_CodePlayground()
         {
@@ -27,41 +32,54 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             this.Dock = DockStyle.Fill;
             this.BackColor = Color.White;
 
-            // 1. Split Container
+            // ... (Your existing SplitContainer setup) ...
             SplitContainer split = new SplitContainer();
             split.Dock = DockStyle.Fill;
             split.Orientation = Orientation.Horizontal;
             split.SplitterDistance = 300;
             this.Controls.Add(split);
 
-            // 2. Code Input (Panel1)
+            // ... (Input Panel) ...
             Panel inputPanel = new Panel();
             inputPanel.Dock = DockStyle.Fill;
             inputPanel.Padding = new Padding(10);
             split.Panel1.Controls.Add(inputPanel);
 
+            // NEW: Header Panel for Close Button
+            Panel headerPanel = new Panel();
+            headerPanel.Dock = DockStyle.Top;
+            headerPanel.Height = 35;
+            inputPanel.Controls.Add(headerPanel);
+
             Label lblCode = new Label();
             lblCode.Text = "Code Editor (C#)";
             lblCode.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            lblCode.Dock = DockStyle.Top;
-            inputPanel.Controls.Add(lblCode);
+            lblCode.Dock = DockStyle.Left;
+            lblCode.AutoSize = true;
+            lblCode.Padding = new Padding(0, 8, 0, 0);
+            headerPanel.Controls.Add(lblCode);
 
+            // NEW: Close Button logic
+            _btnClose = new Button();
+            _btnClose.Text = "❌ Close";
+            _btnClose.ForeColor = Color.Red;
+            _btnClose.FlatStyle = FlatStyle.Flat;
+            _btnClose.FlatAppearance.BorderSize = 0;
+            _btnClose.Dock = DockStyle.Right;
+            _btnClose.Cursor = Cursors.Hand;
+            _btnClose.Click += (s, e) => RequestClose?.Invoke(this, EventArgs.Empty);
+            headerPanel.Controls.Add(_btnClose);
+
+            // ... (Rest of your existing setup for _txtCodeInput, _btnRun, Output, etc.) ...
             _txtCodeInput = new RichTextBox();
             _txtCodeInput.Dock = DockStyle.Fill;
             _txtCodeInput.Font = new Font("Consolas", 11);
             _txtCodeInput.BackColor = Color.FromArgb(30, 30, 30);
             _txtCodeInput.ForeColor = Color.White;
-            // Updated default text to show capabilities
-            _txtCodeInput.Text = "// Try these examples:\n" +
-                                 "// 1. Console Output:\n" +
-                                 "Console.WriteLine(\"Hello from Console!\");\n\n" +
-                                 "// 2. Simple Math (Return value):\n" +
-                                 "int a = 10;\n" +
-                                 "int b = 20;\n" +
-                                 "a + b // Returns 30\n\n" +
-                                 "// 3. GUI Interaction:\n" +
-                                 "// MessageBox.Show(\"Hello from a popup!\");";
+            _txtCodeInput.Text = "// Type your C# code here...\nConsole.WriteLine(\"Hello World!\");";
+            // Ensure this is added AFTER headerPanel so it fills the rest
             inputPanel.Controls.Add(_txtCodeInput);
+            _txtCodeInput.BringToFront();
 
             _btnRun = new Button();
             _btnRun.Text = "▶ Run Code";
@@ -74,7 +92,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             _btnRun.Click += BtnRun_Click;
             inputPanel.Controls.Add(_btnRun);
 
-            // 3. Output (Panel2)
+            // Output Panel Setup (Same as before)
             Panel outputPanel = new Panel();
             outputPanel.Dock = DockStyle.Fill;
             outputPanel.Padding = new Padding(10);
@@ -88,7 +106,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 
             _txtOutput = new TextBox();
             _txtOutput.Multiline = true;
-            _txtOutput.ReadOnly = true; // Keeps it as an output log, not an interactive terminal
+            _txtOutput.ReadOnly = true;
             _txtOutput.Dock = DockStyle.Fill;
             _txtOutput.Font = new Font("Consolas", 10);
             _txtOutput.BackColor = Color.FromArgb(240, 240, 240);
@@ -98,74 +116,25 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 
         private async void BtnRun_Click(object sender, EventArgs e)
         {
+            // ... (Keep your existing Run logic) ...
             _txtOutput.Text = "Running...";
-            _btnRun.Enabled = false;
-            _txtOutput.ForeColor = Color.Black;
-
             string code = _txtCodeInput.Text;
-
-            // Capture Standard Output
             TextWriter originalConsoleOut = Console.Out;
             using (StringWriter writer = new StringWriter())
             {
                 try
                 {
                     Console.SetOut(writer);
-
-                    // Add imports AND References to support MessageBox and Linq
-                    var options = ScriptOptions.Default
-                        .WithImports("System", "System.Collections.Generic", "System.Linq", "System.Text", "System.Windows.Forms", "System.Drawing")
-                        .AddReferences(
-                            typeof(object).Assembly, // System.Private.CoreLib
-                            typeof(System.Linq.Enumerable).Assembly, // System.Linq
-                            typeof(System.Collections.Generic.List<>).Assembly, // System.Collections
-                            typeof(System.Windows.Forms.MessageBox).Assembly, // System.Windows.Forms
-                            typeof(System.Drawing.Point).Assembly // System.Drawing
-                        );
-
-                    // Run Script
+                    var options = ScriptOptions.Default.WithImports("System", "System.Collections.Generic", "System.Linq", "System.Text", "System.Windows.Forms", "System.Drawing")
+                        .AddReferences(typeof(object).Assembly, typeof(Enumerable).Assembly, typeof(List<>).Assembly, typeof(MessageBox).Assembly, typeof(Point).Assembly);
                     object result = await CSharpScript.EvaluateAsync(code, options);
-
-                    // 1. Get Console Output
                     string consoleOutput = writer.ToString();
-
-                    // 2. Get Return Value (if any)
                     string resultOutput = result != null ? result.ToString() : "";
-
-                    // Combine them
-                    string finalOutput = "";
-                    if (!string.IsNullOrEmpty(consoleOutput))
-                    {
-                        finalOutput += "--- Console Output ---\r\n" + consoleOutput + "\r\n";
-                    }
-                    if (!string.IsNullOrEmpty(resultOutput))
-                    {
-                        finalOutput += "--- Return Value ---\r\n" + resultOutput;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(finalOutput))
-                    {
-                        finalOutput = "Code executed successfully (No Output).";
-                    }
-
-                    _txtOutput.Text = finalOutput;
+                    _txtOutput.Text = (string.IsNullOrEmpty(consoleOutput) ? "" : "--- Output ---\r\n" + consoleOutput + "\r\n") +
+                                      (string.IsNullOrEmpty(resultOutput) ? "" : "--- Result ---\r\n" + resultOutput);
                 }
-                catch (CompilationErrorException ex)
-                {
-                    _txtOutput.Text = "Build Error:\r\n" + string.Join(Environment.NewLine, ex.Diagnostics);
-                    _txtOutput.ForeColor = Color.Red;
-                }
-                catch (Exception ex)
-                {
-                    _txtOutput.Text = "Runtime Error:\r\n" + ex.Message;
-                    _txtOutput.ForeColor = Color.Red;
-                }
-                finally
-                {
-                    // Restore Console
-                    Console.SetOut(originalConsoleOut);
-                    _btnRun.Enabled = true;
-                }
+                catch (Exception ex) { _txtOutput.Text = "Error: " + ex.Message; }
+                finally { Console.SetOut(originalConsoleOut); }
             }
         }
     }

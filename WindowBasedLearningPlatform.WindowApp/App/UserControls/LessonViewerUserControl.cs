@@ -4,24 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowBasedLearningPlatform.WindowApp.Features.Lessons;
 using WindowBasedLearningPlatform.WindowApp.Models.LessonsModel;
 using WindowBasedLearningPlatform.WindowApp.Models.UserModel;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Resources.ResXFileRef;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
-using System.Drawing;
 
 namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 {
@@ -30,15 +18,21 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private string _language;
         private Button _activeSectionButton;
         private bool _isWebViewInitialized = false;
+
+        // Main Layout: Left=Menu, Right=Content
         private SplitContainer _layoutContainer;
+
+        // Content Layout: Top=Lesson, Bottom=Playground (or Left/Right)
+        private SplitContainer _contentSplitContainer;
+
         private UC_CodePlayground _activePlayground;
-        private WebBrowser _contentBrowser;
-        private int _currentLessonsId;
+        // private WebBrowser _contentBrowser; // Replaced by WebView2 in your code 'lessonsWebView'
+
+        private int _currentLessonId;
         private UserResponseModel _userResponseModel = new UserResponseModel();
         private bool _webEventsHooked = false;
         private bool _lessonReadTriggered = false;
 
-        // Changed to EventHandler to match standard patterns
         public event EventHandler<int> QuizRequested;
 
         public LessonViewerUserControl(string language, UserResponseModel model)
@@ -49,50 +43,101 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             _language = language;
             btn_menuTitle.Text = _language;
             _userResponseModel = model;
+
+            // 1. Re-structuring the Layout
+            CreateSplitLayout();
+
             LoadSidebar();
 
-            // --- Action Panel for Buttons ---
+            // --- Action Panel ---
             Panel actionPanel = new Panel();
             actionPanel.Dock = DockStyle.Bottom;
             actionPanel.Height = 50;
             actionPanel.Padding = new Padding(10);
             lessonsPanel.Controls.Add(actionPanel);
+            actionPanel.BringToFront(); // Ensure it's at the bottom
 
-            // 1. Practice Button
+            // 1. Practice Button (Toggle)
             Button btnPractice = new Button();
-            btnPractice.Text = "💻 Open Code Playground";
+            btnPractice.Text = "💻 Open Playground Split-View";
             btnPractice.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
-            btnPractice.BackColor = Color.Orange; // Orange for practice
+            btnPractice.BackColor = Color.Orange;
             btnPractice.ForeColor = Color.Black;
             btnPractice.FlatStyle = FlatStyle.Flat;
             btnPractice.FlatAppearance.BorderSize = 0;
-            btnPractice.Dock = DockStyle.Left; // Dock left
-            btnPractice.Width = 200;
+            btnPractice.Dock = DockStyle.Left;
+            btnPractice.Width = 220;
             btnPractice.Cursor = Cursors.Hand;
-            btnPractice.Click += BtnPractice_Click; // Renamed handler for clarity
+            btnPractice.Click += BtnPractice_Click;
             actionPanel.Controls.Add(btnPractice);
 
-            // 2. Take Quiz Button (The code you selected)
+            // 2. Take Quiz Button
             Button btnQuiz = new Button();
             btnQuiz.Text = "📝 Take Quiz";
             btnQuiz.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
-            btnQuiz.BackColor = ColorTranslator.FromHtml("#fdd23f"); // Brand Yellow
+            btnQuiz.BackColor = ColorTranslator.FromHtml("#fdd23f");
             btnQuiz.ForeColor = Color.Black;
             btnQuiz.FlatStyle = FlatStyle.Flat;
             btnQuiz.FlatAppearance.BorderSize = 0;
-            btnQuiz.Dock = DockStyle.Right; // Dock right
+            btnQuiz.Dock = DockStyle.Right;
             btnQuiz.Width = 150;
             btnQuiz.Cursor = Cursors.Hand;
-            btnQuiz.Click += (s, e) => QuizRequested?.Invoke(this, _currentLessonsId); // Fire event!
+            btnQuiz.Click += (s, e) =>
+            {
+                // Close playground if open to focus on quiz
+                if (!_contentSplitContainer.Panel2Collapsed)
+                {
+                    _contentSplitContainer.Panel2Collapsed = true;
+                    btnPractice.Text = "💻 Open Playground Split-View";
+                }
+                QuizRequested?.Invoke(this, _currentLessonId);
+            };
             actionPanel.Controls.Add(btnQuiz);
+        }
+
+        private void CreateSplitLayout()
+        {
+            // 1. Create the SplitContainer
+            _contentSplitContainer = new SplitContainer();
+            _contentSplitContainer.Dock = DockStyle.Fill;
+            _contentSplitContainer.Orientation = Orientation.Vertical; // Side by Side
+
+            // Adjust Splitter Distance: Give Lesson Viewer ~60-70% space
+            // Assuming default width ~900-1000px.
+            // Using a percentage approach isn't directly supported by SplitterDistance (pixels only),
+            // but we can set a reasonable default or handle Resize.
+            // Let's set it to 600 which is roughly 2/3 of a standard 900-1000px form width.
+            _contentSplitContainer.SplitterDistance = 600;
+
+            // 2. Add it to the main lessonsPanel
+            lessonsPanel.Controls.Add(_contentSplitContainer);
+            _contentSplitContainer.BringToFront();
+
+            // 3. Move WebView2 to Panel1 (Left)
+            lessonsWebView.Parent = _contentSplitContainer.Panel1;
+            lessonsWebView.Dock = DockStyle.Fill;
+
+            // 4. Initialize Playground in Panel2 (Right)
+            _activePlayground = new UC_CodePlayground();
+            _activePlayground.Dock = DockStyle.Fill;
+            _contentSplitContainer.Panel2.Controls.Add(_activePlayground);
+
+            // 5. Start Collapsed (Hidden)
+            _contentSplitContainer.Panel2Collapsed = true;
+
+            // Handle Resize to maintain ratio (Optional polish)
+            this.Resize += (s, e) => {
+                if (!_contentSplitContainer.Panel2Collapsed && this.Width > 200)
+                {
+                    // Keep ratio roughly 60/40
+                    try { _contentSplitContainer.SplitterDistance = (int)(this.Width * 0.6); } catch { }
+                }
+            };
         }
 
         public void SetMarkdownContent(string markdownContent)
         {
-            if (_isWebViewInitialized)
-            {
-                LoadMarkdownContent(markdownContent); // Pass content
-            }
+            if (_isWebViewInitialized) LoadMarkdownContent(markdownContent);
         }
 
         private async void InitializeAsync()
@@ -103,17 +148,12 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                 _isWebViewInitialized = true;
                 SetupWebViewEvents();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error initializing WebView2: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"WebView2 Error: {ex.Message}"); }
         }
 
         private void LoadSidebar()
         {
             menuPanel.Controls.Clear();
-            List<SectionResponseModel> model = new List<SectionResponseModel>();
             var result = SelectedLessons.LoadSidebar(_language);
 
             Button titleButton = new Button();
@@ -128,7 +168,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             titleButton.BackColor = Color.FromArgb(30, 30, 30);
             titleButton.ForeColor = Color.White;
             titleButton.Font = new System.Drawing.Font("Segoe UI", 11);
-
             menuPanel.Controls.Add(titleButton);
 
             if (result.Count > 0)
@@ -137,11 +176,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                 {
                     Button btn = new Button();
                     btn.Text = sec.SectionName;
-                    btn.Tag = new SectionResponseModel
-                    {
-                        SectionCode = sec.SectionCode,
-                        SectionId = sec.SectionId,
-                    };
+                    btn.Tag = new SectionResponseModel { SectionCode = sec.SectionCode, SectionId = sec.SectionId };
                     btn.Dock = DockStyle.Top;
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.FlatAppearance.BorderSize = 0;
@@ -151,11 +186,9 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                     btn.TextAlign = ContentAlignment.MiddleLeft;
                     btn.Font = new System.Drawing.Font("Segoe UI", 11);
                     btn.Click += SectionButton_Click;
-
                     menuPanel.Controls.Add(btn);
                     menuPanel.Controls.SetChildIndex(btn, 0);
                 }
-
             }
         }
 
@@ -163,24 +196,19 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         {
             var btn = sender as Button;
             var data = (SectionResponseModel)btn.Tag;
-
-
-            if (_activeSectionButton != null)
-                _activeSectionButton.BackColor = Color.FromArgb(30, 30, 30);
-
+            if (_activeSectionButton != null) _activeSectionButton.BackColor = Color.FromArgb(30, 30, 30);
             btn.BackColor = Color.FromArgb(50, 90, 200);
             _activeSectionButton = btn;
-
             LoadLessons(data.SectionCode, data.SectionId);
         }
 
-        private async void LoadLessons(string sectionCode, int sectionId)
+        private void LoadLessons(string sectionCode, int sectionId)
         {
             titlepanel.Controls.Clear();
             _lessonReadTriggered = false;
-
             var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
-            _currentLessonsId = lessons.LessonId;
+            _currentLessonId = lessons.LessonId;
+
             var lbl = new Label()
             {
                 Text = $"{lessons.LessonTitle}",
@@ -188,11 +216,9 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                 Font = new System.Drawing.Font("Segoe UI", 20),
                 AutoSize = true
             };
-
             titlepanel.Controls.Add(lbl);
 
             var lessonsContent = SelectedLessons.LoadLessonContent(lessons.LessonCode, lessons.LessonId);
-            //InitializeAsync();
             LoadMarkdownContent(lessonsContent.ContentBody);
         }
 
@@ -200,19 +226,11 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         {
             if (_webEventsHooked) return;
             _webEventsHooked = true;
-
-            lessonsWebView.CoreWebView2.NavigationCompleted += (s, e) =>
-            {
-                InjectScrollScript();
-            };
-
+            lessonsWebView.CoreWebView2.NavigationCompleted += (s, e) => InjectScrollScript();
             lessonsWebView.CoreWebView2.WebMessageReceived += (s, e) =>
             {
                 var message = e.TryGetWebMessageAsString();
-                if (message == "LessonRead")
-                {
-                    HandleLessonRead();
-                }
+                if (message == "LessonRead") HandleLessonRead();
             };
         }
 
@@ -220,50 +238,28 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         {
             if (_lessonReadTriggered) return;
             _lessonReadTriggered = true;
-
-            UserProgress.UpdateUserProgress(_currentLessonsId, _userResponseModel.UserId);
-            MessageBox.Show("Scroll bottom reached!");
+            UserProgress.UpdateUserProgress(_currentLessonId, _userResponseModel.UserId);
         }
-
 
         private void InjectScrollScript()
         {
             lessonsWebView.ExecuteScriptAsync(@"
-        function notifyRead() {
-            chrome.webview.postMessage('LessonRead');
-        }
-
-        let done=false;
-
-        function checkAutoComplete() {
-            const bodyHeight = document.body.scrollHeight;
-            const viewHeight = window.innerHeight;
-
-            // content fits screen, no scroll needed
-            if (bodyHeight <= viewHeight) {
-                if (!done) {
-                    done = true;
-                    notifyRead();
+                function notifyRead() { chrome.webview.postMessage('LessonRead'); }
+                let done=false;
+                function checkAutoComplete() {
+                    const bodyHeight = document.body.scrollHeight;
+                    const viewHeight = window.innerHeight;
+                    if (bodyHeight <= viewHeight) { if (!done) { done = true; notifyRead(); } }
                 }
-            }
+                document.addEventListener('scroll', () => {
+                    if(done) return;
+                    const scrolled = window.scrollY + window.innerHeight;
+                    const bottom = document.body.scrollHeight;
+                    if (scrolled >= bottom - 10) { done = true; notifyRead(); }
+                });
+                setTimeout(checkAutoComplete, 300);
+            ");
         }
-
-        document.addEventListener('scroll', () => {
-            if(done) return;
-            const scrolled = window.scrollY + window.innerHeight;
-            const bottom = document.body.scrollHeight;
-            if (scrolled >= bottom - 10) {
-                done = true;
-                notifyRead();
-            }
-        });
-
-        // check after rendering finishes
-        setTimeout(checkAutoComplete, 300);
-    ");
-        }
-
-
 
         private void LoadMarkdownContent(string content = null)
         {
@@ -275,229 +271,61 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading markdown: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error loading markdown: {ex.Message}");
             }
         }
 
         private string GetEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourcePath = assembly.GetManifestResourceNames()
-                .FirstOrDefault(r => r.EndsWith(resourceName));
-
-            if (string.IsNullOrEmpty(resourcePath))
-            {
-                throw new Exception($"Embedded resource '{resourceName}' not found.");
-            }
-
-            using (Stream? stream = assembly.GetManifestResourceStream(resourcePath))
-            {
-                if (stream == null)
-                {
-                    throw new Exception($"Could not load embedded resource '{resourceName}'.");
-                }
-
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        // Renamed from BtnQuiz_Click to BtnPractice_Click to match logic
-        private void BtnPractice_Click(object sender, EventArgs e)
-        {
-            // Assuming lessonsPanel is the container for content (based on your previous code)
-            // Or maybe it should be lessonsWebView's parent? 
-            // The previous code added btnPractice to 'lessonsPanel'.
-
-            Panel contentPanel = lessonsPanel;
-
-            // If playground is already open, close it (toggle)
-            if (_activePlayground != null && contentPanel.Controls.Contains(_activePlayground))
-            {
-                contentPanel.Controls.Remove(_activePlayground);
-                _activePlayground = null;
-                lessonsWebView.Visible = true; // Show lesson again
-                ((Button)sender).Text = "💻 Open Code Playground";
-            }
-            else
-            {
-                // Open Playground
-                _activePlayground = new UC_CodePlayground();
-                _activePlayground.Dock = DockStyle.Fill;
-
-                // Hide browser temporarily
-                lessonsWebView.Visible = false;
-
-                // Add playground to panel
-                contentPanel.Controls.Add(_activePlayground);
-                _activePlayground.BringToFront();
-
-                ((Button)sender).Text = "⬅ Back to Lesson";
-            }
+            var resourcePath = assembly.GetManifestResourceNames().FirstOrDefault(r => r.EndsWith(resourceName));
+            if (string.IsNullOrEmpty(resourcePath)) throw new Exception($"Embedded resource '{resourceName}' not found.");
+            using (var stream = assembly.GetManifestResourceStream(resourcePath))
+            using (var reader = new System.IO.StreamReader(stream)) return reader.ReadToEnd();
         }
 
         private string GenerateHtmlContent(string markdownContent, string showdownJs)
         {
-            // Escape the markdown content for JavaScript
-            string escapedMarkdown = (markdownContent ?? "")
-                .Replace("\\", "\\\\")
-                .Replace("`", "\\`")
-                .Replace("${", "\\${");
-
+            string escapedMarkdown = (markdownContent ?? "").Replace("\\", "\\\\").Replace("`", "\\`").Replace("${", "\\${");
             return $@"<!DOCTYPE html>
 <html lang=""en"">
 <head>
   <meta charset=""UTF-8"" />
   <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"" />
-  <title>Markdown Viewer</title>
-
   <style>
-    body {{
-      font-family: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
-      padding: 24px;
-      line-height: 1.6;
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgb(31, 41, 55);
-      color: white;
-    }}
-
-    h1, h2, h3, h4, h5, h6 {{
-      margin-top: 24px;
-      margin-bottom: 16px;
-      font-weight: 600;
-      line-height: 1.25;
-      color: white;
-    }}
-
-    h1 {{
-      font-size: 2em;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 8px;
-    }}
-
-    h2 {{
-      font-size: 1.5em;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 8px;
-    }}
-
-    h3 {{
-      font-size: 1.25em;
-    }}
-
-    pre {{
-      padding: 16px;
-      overflow: auto;
-      background: rgb(15, 23, 42);
-      border-radius: 6px;
-      font-size: 14px;
-      line-height: 1.45;
-      color: white;
-    }}
-
-    code {{
-      background: rgb(15, 23, 42);
-      border-radius: 3px;
-      padding: 2px 6px;
-      font-family: 'Consolas', 'Monaco', monospace;
-      font-size: 85%;
-      color: white;
-    }}
-
-    pre code {{
-      background: transparent;
-      padding: 0;
-      color: white;
-    }}
-
-    table {{
-      border-collapse: collapse;
-      width: 100%;
-      margin: 16px 0;
-    }}
-
-    th, td {{
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 8px 13px;
-      text-align: left;
-      color: white;
-    }}
-
-    th {{
-      background: rgba(255,255,255,0.1);
-      font-weight: 600;
-    }}
-
-    tr:nth-child(even) {{
-      background: rgba(255,255,255,0.05);
-    }}
-
-    blockquote {{
-      border-left: 4px solid rgba(255,255,255,0.3);
-      padding-left: 16px;
-      color: rgba(255,255,255,0.8);
-      margin: 16px 0;
-    }}
-
-    a {{
-      color: #93c5fd;
-      text-decoration: none;
-    }}
-
-    a:hover {{
-      text-decoration: underline;
-    }}
-
-    img {{
-      max-width: 100%;
-      height: auto;
-    }}
-
-    ul, ol {{
-      padding-left: 2em;
-      margin: 16px 0;
-    }}
-
-    li {{
-      margin: 4px 0;
-    }}
+    body {{ font-family: 'Segoe UI', Arial, sans-serif; padding: 24px; background: rgb(31, 41, 55); color: white; }}
+    pre {{ background: rgb(15, 23, 42); padding: 16px; border-radius: 6px; overflow: auto; }}
+    code {{ background: rgb(15, 23, 42); padding: 2px 6px; border-radius: 3px; font-family: monospace; }}
   </style>
 </head>
-
 <body>
   <div id=""output""></div>
-
-  <script>
-    {showdownJs}
-  </script>
-
+  <script>{showdownJs}</script>
   <script>
     try {{
-      const converter = new showdown.Converter({{
-        tables: true,
-        strikethrough: true,
-        tasklists: true,
-        simplifiedAutoLink: true,
-        ghCodeBlocks: true,
-        smoothLivePreview: true
-      }});
-
-      const markdownText = `{escapedMarkdown}`;
-      const html = converter.makeHtml(markdownText);
+      const converter = new showdown.Converter({{ tables: true, ghCodeBlocks: true }});
+      const html = converter.makeHtml(`{escapedMarkdown}`);
       document.getElementById('output').innerHTML = html;
-    }} catch (error) {{
-      document.getElementById('output').innerHTML =
-        '<p style=""color: red;"">Error rendering markdown: ' + error.message + '</p>';
-    }}
+    }} catch (e) {{ document.getElementById('output').innerHTML = e.message; }}
   </script>
 </body>
 </html>";
         }
 
-
+        private void BtnPractice_Click(object sender, EventArgs e)
+        {
+            _contentSplitContainer.Panel2Collapsed = !_contentSplitContainer.Panel2Collapsed;
+            Button btn = sender as Button;
+            if (_contentSplitContainer.Panel2Collapsed)
+            {
+                btn.Text = "💻 Open Playground Split-View";
+            }
+            else
+            {
+                btn.Text = "🚫 Close Playground";
+                // Optionally adjust splitter here if needed on open
+                // _contentSplitContainer.SplitterDistance = (int)(lessonsPanel.Width * 0.6);
+            }
+        }
     }
 }
