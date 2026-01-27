@@ -81,7 +81,23 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             }
         }
 
-            public static List<QuizQuestion> GetQuizzesForLesson(int lessonId)
+        public object? ExecuteScalar(string query, params SqlParameter[] parameters)
+        {
+            string connectionString = ConfigurationService.GetDbConnection();
+            using SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            using SqlCommand command = new SqlCommand(query, connection);
+
+            if (parameters is not null)
+            {
+                command.Parameters.AddRange(parameters);
+            }
+
+            return command.ExecuteScalar();
+        }
+
+        public static List<QuizQuestion> GetQuizzesForLesson(int lessonId)
         {
             var quizzes = new List<QuizQuestion>();
 
@@ -168,5 +184,5 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             }
         }
     }
-    }
+}
 

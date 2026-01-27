@@ -32,6 +32,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         private UserResponseModel _userResponseModel = new UserResponseModel();
         private bool _webEventsHooked = false;
         private bool _lessonReadTriggered = false;
+        private DateTime _lessonStartTime;
+
 
         public event EventHandler<int> QuizRequested;
 
@@ -206,9 +208,13 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         {
             titlepanel.Controls.Clear();
             _lessonReadTriggered = false;
+            _lessonStartTime = DateTime.Now;
             var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
             _currentLessonId = lessons.LessonId;
 
+
+            var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
+            _currentLessonsId = lessons.LessonId;
             var lbl = new Label()
             {
                 Text = $"{lessons.LessonTitle}",
@@ -234,11 +240,26 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             };
         }
 
+        private void SaveLessonDuration()
+        {
+            var endTime = DateTime.Now;
+            var duration = endTime - _lessonStartTime;
+
+            var minutes = (int)duration.TotalMinutes;
+            var seconds = (int)duration.TotalSeconds;
+
+            UserProgress.AddTime(_currentLessonsId, _userResponseModel.UserId, minutes);
+        }
+
+
         private void HandleLessonRead()
         {
             if (_lessonReadTriggered) return;
             _lessonReadTriggered = true;
-            UserProgress.UpdateUserProgress(_currentLessonId, _userResponseModel.UserId);
+
+            UserProgress.UpdateUserProgress(_currentLessonsId, _userResponseModel.UserId,_language);
+            SaveLessonDuration();
+            // MessageBox.Show("Scroll bottom reached!");
         }
 
         private void InjectScrollScript()
