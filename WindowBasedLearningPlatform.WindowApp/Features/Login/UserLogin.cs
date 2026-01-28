@@ -58,6 +58,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Features.Login
                 return userResult;
             }
 
+
             var insertParams = new[]
             {
                 new SqlParameter("@userName", userName),
