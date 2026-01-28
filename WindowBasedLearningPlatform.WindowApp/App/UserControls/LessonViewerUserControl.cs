@@ -213,8 +213,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             _currentLessonId = lessons.LessonId;
 
 
-            var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
-            _currentLessonsId = lessons.LessonId;
+            //var lessons = SelectedLessons.LoadLessons(sectionCode, sectionId);
+            //_currentLessonsId = lessons.LessonId;
             var lbl = new Label()
             {
                 Text = $"{lessons.LessonTitle}",
@@ -248,7 +248,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             var minutes = (int)duration.TotalMinutes;
             var seconds = (int)duration.TotalSeconds;
 
-            UserProgress.AddTime(_currentLessonsId, _userResponseModel.UserId, minutes);
+            //UserProgress.AddTime(_currentLessonsId, _userResponseModel.UserId, minutes);
         }
 
 
@@ -257,7 +257,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             if (_lessonReadTriggered) return;
             _lessonReadTriggered = true;
 
-            UserProgress.UpdateUserProgress(_currentLessonsId, _userResponseModel.UserId,_language);
+            //UserProgress.UpdateUserProgress(_currentLessonsId, _userResponseModel.UserId,_language);
             SaveLessonDuration();
             // MessageBox.Show("Scroll bottom reached!");
         }
