@@ -14,7 +14,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
     public partial class UC_CodePlayground : UserControl
     {
         private RichTextBox _txtCodeInput;
-        private RichTextBox _txtOutput; // Changed to RichTextBox for better formatting/visibility
+        private RichTextBox _txtOutput;
         private Button _btnRun;
         private Button _btnClose;
 
@@ -31,7 +31,15 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
         public UC_CodePlayground()
         {
             InitializeComponent();
-            _aiService = new OllamaService("codellama");
+
+            // FIX: Load model and endpoint from ConfigurationService
+            var configService = new ConfigurationService();
+            string modelName = configService.GetAiModel(); // Returns "phi-4-mini" based on config
+            string endpoint = configService.GetAiEndpoint(); // Returns configured endpoint
+
+            // Initialize AI Service with config values
+            _aiService = new OllamaService(modelName, endpoint);
+
             SetupUI();
         }
 
@@ -47,15 +55,13 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             SplitContainer split = new SplitContainer();
             split.Dock = DockStyle.Fill;
             split.Orientation = Orientation.Horizontal;
-            split.FixedPanel = FixedPanel.Panel2; // Output panel stays stable on resize
+            split.FixedPanel = FixedPanel.Panel2;
             this.Controls.Add(split);
 
             // --- INPUT PANEL (Top - Panel1) ---
             Panel inputPanel = new Panel();
             inputPanel.Dock = DockStyle.Fill;
             split.Panel1.Controls.Add(inputPanel);
-
-            // 2. Define Input Controls
 
             // Header (Top)
             Panel headerPanel = new Panel();
@@ -70,7 +76,6 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             lblCode.Dock = DockStyle.Left;
             lblCode.AutoSize = true;
             lblCode.TextAlign = ContentAlignment.MiddleLeft;
-            // Center vert workaround
             lblCode.Padding = new Padding(0, 10, 0, 0);
 
             headerPanel.Controls.Add(lblCode);
@@ -147,7 +152,7 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             zoomPanel.Controls.Add(_lblZoom);
             controlsPanel.Controls.Add(zoomPanel);
 
-            // Editor Container (Fill) - Wrapper to prevent Header overlap
+            // Editor Container 
             Panel editorContainer = new Panel();
             editorContainer.Dock = DockStyle.Fill;
             editorContainer.Padding = new Padding(0);
@@ -163,21 +168,12 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
 
             editorContainer.Controls.Add(_txtCodeInput);
 
-            // 3. Assemble Input Panel - Add Dock.Top/Bottom FIRST to ensure they cut space correctly
-            // Actually, adding them to Controls collection: Index 0 is Top Priority.
-            // We add Header (Index 0), Footer (Index 0 -> Header=1), Editor (Index 0 -> Footer=1 -> Header=2)
-            // Wait, to get Top/Bottom priority, controls should be at the FRONT of Z-Order (Index 0).
-
             inputPanel.Controls.Add(editorContainer);
             inputPanel.Controls.Add(controlsPanel);
             inputPanel.Controls.Add(headerPanel);
 
-            // Explicitly set Z-Order: Header (Top) -> Footer (Bottom) -> Editor (Fill)
             headerPanel.BringToFront();
-            controlsPanel.BringToFront(); // If we bring footer to front now, it becomes index 0. Header becomes 1. 
-            // Layout priority: Index 0 takes slice. Index 1 takes slice of remainder.
-            // Either order of Header/Footer works as long as they are before Editor.
-            // Editor is implicitly at back now.
+            controlsPanel.BringToFront();
 
             // --- OUTPUT PANEL (Bottom - Panel2) ---
             Panel outputPanel = new Panel();
@@ -216,10 +212,8 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
             outputHeader.BringToFront();
             _txtOutput.SendToBack();
 
-            // 4. Set Splitter Distance Logic - Use percentage to be safe
-            // If control is not visible yet, Height might be default.
             int defaultHeight = this.Height > 0 ? this.Height : 500;
-            split.SplitterDistance = (int)(defaultHeight * 0.75); // 75% Code, 25% Output
+            split.SplitterDistance = (int)(defaultHeight * 0.75);
         }
 
         private async void BtnRun_Click(object sender, EventArgs e)
@@ -282,14 +276,13 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                 bool isRunning = await _aiService.IsRunningAsync();
                 if (!isRunning)
                 {
-                    MessageBox.Show("Could not connect to Ollama (http://127.0.0.1:11434).\nPlease ensure 'ollama serve' is running.", "AI Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Could not connect to Ollama.\nPlease ensure 'ollama serve' is running and the endpoint is correct.", "AI Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 _btnAiExplain.Text = "Thinking...";
                 string explanation = await _aiService.GetCodeExplanationAsync(code);
 
-                // For now, show in MessageBox, or we could pipe it to output
                 MessageBox.Show(explanation, "AI Tutor", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

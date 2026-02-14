@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Diagnostics; // Added for timing
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic; // Required for IAsyncEnumerable
-using System.IO; // Required for Stream reading
+using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -15,33 +15,49 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         // STATIC HttpClient is best practice to prevent socket exhaustion in Windows
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        // 127.0.0.1 is the loopback address. It is physically impossible for this IP 
-        // to route to an external server. It always resolves to THIS machine.
-        private const string OllamaBaseUrl = "http://127.0.0.1:11434";
         private readonly string _modelName;
+        private readonly string _generateEndpoint;
+        private readonly string _baseUrl;
 
         static OllamaService()
         {
             // Set timeout once for the shared client
-            _httpClient.Timeout = TimeSpan.FromMinutes(5); // Increased for larger models
-        }
-
-        // UPGRADE NOTE: Default changed from "codellama" to "qwen2.5-coder"
-        // Qwen 2.5 Coder is the SOTA open-weight model for 2025/2026.
-        // It is faster, smarter, and hallucinates less than CodeLlama.
-        public OllamaService(string modelName = "qwen2.5-coder")
-        {
-            _modelName = modelName;
+            // Generous timeout for larger models or slower hardware
+            _httpClient.Timeout = TimeSpan.FromMinutes(5);
         }
 
         /// <summary>
-        /// Checks if Ollama is running locally on port 11434.
+        /// Initializes the Ollama Service with configuration settings.
+        /// </summary>
+        /// <param name="modelName">The name of the model (e.g., phi-4-mini)</param>
+        /// <param name="endpointUrl">The full generation endpoint (e.g., http://localhost:11434/api/generate)</param>
+        public OllamaService(string modelName, string endpointUrl)
+        {
+            _modelName = modelName;
+            _generateEndpoint = endpointUrl;
+
+            // Derive base URL for the health check (removing /api/generate)
+            try
+            {
+                var uri = new Uri(endpointUrl);
+                _baseUrl = $"{uri.Scheme}://{uri.Host}:{uri.Port}";
+            }
+            catch
+            {
+                // Fallback if URL parsing fails
+                _baseUrl = "http://127.0.0.1:11434";
+            }
+        }
+
+        /// <summary>
+        /// Checks if Ollama is running locally.
         /// </summary>
         public async Task<bool> IsRunningAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync(OllamaBaseUrl);
+                // Check the root URL (usually returns "Ollama is running")
+                var response = await _httpClient.GetAsync(_baseUrl);
                 return response.IsSuccessStatusCode;
             }
             catch
@@ -55,9 +71,6 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         /// </summary>
         public async Task<string> GetCodeExplanationAsync(string code)
         {
-            // 1. Setup Request
-            var endpoint = $"{OllamaBaseUrl}/api/generate";
-
             // PROMPT OPTIMIZATION: 
             // 1. Assign a Persona (Senior Architect).
             // 2. Ask for "Concise" output. Less text = Faster generation.
@@ -87,14 +100,14 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
 
             try
             {
-                var response = await _httpClient.PostAsync(endpoint, content);
+                var response = await _httpClient.PostAsync(_generateEndpoint, content);
 
                 stopwatch.Stop();
                 var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // Specific error guidance for the new model
+                    // Specific error guidance
                     return $"Error: Ollama status {response.StatusCode}. \n\n" +
                            $"MISSING MODEL: Please run this command in terminal: \n" +
                            $"ollama pull {_modelName}";
@@ -109,7 +122,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
             }
             catch (HttpRequestException)
             {
-                return "Connection Failed: Could not find Ollama at http://127.0.0.1:11434. \n" +
+                return $"Connection Failed: Could not connect to {_baseUrl}. \n" +
                        "Please ensure 'ollama serve' is running.";
             }
             catch (Exception ex)
@@ -123,8 +136,6 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
         /// </summary>
         public async IAsyncEnumerable<string> GetCodeExplanationStreamAsync(string code)
         {
-            var endpoint = $"{OllamaBaseUrl}/api/generate";
-
             var payload = new
             {
                 model = _modelName,
@@ -137,7 +148,7 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
                 }
             };
 
-            var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+            var request = new HttpRequestMessage(HttpMethod.Post, _generateEndpoint);
             request.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
             using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
