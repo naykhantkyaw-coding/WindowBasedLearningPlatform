@@ -102,14 +102,14 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
                     var obj = JObject.Parse(json);
 
                     if (obj["AiEndpoint"] != null)
-                        return obj["AiEndpoint"].ToString();
+                        return NormalizeEndpoint(obj["AiEndpoint"].ToString());
 
                     if (obj["AI"] != null)
                     {
                         var ai = obj["AI"];
-                        if (ai["Endpoint"] != null) return ai["Endpoint"].ToString();
-                        if (ai["Url"] != null) return ai["Url"].ToString();
-                        if (ai["BaseUrl"] != null) return ai["BaseUrl"].ToString();
+                        if (ai["Endpoint"] != null) return NormalizeEndpoint(ai["Endpoint"].ToString());
+                        if (ai["Url"] != null) return NormalizeEndpoint(ai["Url"].ToString());
+                        if (ai["BaseUrl"] != null) return NormalizeEndpoint(ai["BaseUrl"].ToString());
                     }
                 }
             }
@@ -118,8 +118,41 @@ namespace WindowBasedLearningPlatform.WindowApp.Services
                 Debug.WriteLine($"Config Error (Endpoint): {ex.Message}");
             }
 
-            // Default Ollama generate endpoint
-            return "http://127.0.0.1:11434/api/generate";
+            // Default Ollama base endpoint (no API path). Callers append the specific API path
+            // (e.g. "/api/generate" or "/api/tags"). Returning a full API path here caused
+            // incorrect URLs like "/api/generate/api/tags" and produced 404 responses.
+            return "http://127.0.0.1:11434";
+        }
+
+        private string NormalizeEndpoint(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return raw;
+            string ep = raw.Trim();
+            // Remove trailing slash
+            while (ep.EndsWith("/")) ep = ep.Substring(0, ep.Length - 1);
+
+            // Known API suffixes to strip if present
+            string[] suffixes = new[] {
+                "/api/generate",
+                "/v1/generate",
+                "/api/responses",
+                "/v1/responses",
+                "/api/completions",
+                "/v1/completions",
+                "/api/tags"
+            };
+
+            foreach (var s in suffixes)
+            {
+                if (ep.EndsWith(s, StringComparison.OrdinalIgnoreCase))
+                {
+                    ep = ep.Substring(0, ep.Length - s.Length);
+                    while (ep.EndsWith("/")) ep = ep.Substring(0, ep.Length - 1);
+                    break;
+                }
+            }
+
+            return ep;
         }
     }
 }

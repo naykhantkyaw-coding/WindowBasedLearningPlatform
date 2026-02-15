@@ -1,187 +1,148 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace WindowBasedLearningPlatform.WindowApp.Services
 {
+    /// <summary>
+    /// Handles communication with the local Ollama API.
+    /// </summary>
     public class OllamaService
     {
-        // STATIC HttpClient is best practice to prevent socket exhaustion in Windows
-        private static readonly HttpClient _httpClient = new HttpClient();
-
         private readonly string _modelName;
-        private readonly string _generateEndpoint;
-        private readonly string _baseUrl;
+        private readonly string _endpoint;
+        private readonly HttpClient _httpClient;
 
-        static OllamaService()
+        public OllamaService(string modelName, string endpoint)
         {
-            // Set timeout once for the shared client
-            // Generous timeout for larger models or slower hardware
-            _httpClient.Timeout = TimeSpan.FromMinutes(5);
+            _modelName = !string.IsNullOrEmpty(modelName) ? modelName : "phi4-mini";
+
+            // Normalize endpoint string
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                _endpoint = "http://localhost:11434";
+            }
+            else
+            {
+                _endpoint = endpoint.TrimEnd('/');
+            }
+
+            _httpClient = new HttpClient();
+            // Set a reasonable timeout for AI generation (e.g., 2 minutes)
+            _httpClient.Timeout = TimeSpan.FromMinutes(2);
         }
 
         /// <summary>
-        /// Initializes the Ollama Service with configuration settings.
-        /// </summary>
-        /// <param name="modelName">The name of the model (e.g., phi-4-mini)</param>
-        /// <param name="endpointUrl">The full generation endpoint (e.g., http://localhost:11434/api/generate)</param>
-        public OllamaService(string modelName, string endpointUrl)
-        {
-            _modelName = modelName;
-            _generateEndpoint = endpointUrl;
-
-            // Derive base URL for the health check (removing /api/generate)
-            try
-            {
-                var uri = new Uri(endpointUrl);
-                _baseUrl = $"{uri.Scheme}://{uri.Host}:{uri.Port}";
-            }
-            catch
-            {
-                // Fallback if URL parsing fails
-                _baseUrl = "http://127.0.0.1:11434";
-            }
-        }
-
-        /// <summary>
-        /// Checks if Ollama is running locally.
+        /// Checks if the Ollama API is reachable.
         /// </summary>
         public async Task<bool> IsRunningAsync()
         {
             try
             {
-                // Check the root URL (usually returns "Ollama is running")
-                var response = await _httpClient.GetAsync(_baseUrl);
-                return response.IsSuccessStatusCode;
+                // Hitting the /api/tags endpoint is a lightweight way to check if the server is up.
+                // Treat any HTTP response (including 404) as evidence the HTTP server is reachable;
+                // only network/connection exceptions mean the server is not reachable.
+                var response = await _httpClient.GetAsync($"{_endpoint}/api/tags");
+                return true;
             }
-            catch
+            catch (Exception)
             {
                 return false;
             }
         }
 
         /// <summary>
-        /// Standard non-streaming request. Optimized with better prompts and token limits.
+        /// Sends code to the LLM and retrieves an explanation.
         /// </summary>
         public async Task<string> GetCodeExplanationAsync(string code)
         {
-            // PROMPT OPTIMIZATION: 
-            // 1. Assign a Persona (Senior Architect).
-            // 2. Ask for "Concise" output. Less text = Faster generation.
-            string systemPrompt = "You are a Senior C# Architect. Explain the code concisely and fix any critical bugs. Do not ramble.";
-
-            var payload = new
-            {
-                model = _modelName,
-                prompt = $"[INST] {systemPrompt} \n\nCode to review:\n{code} [/INST]",
-                stream = false,
-                // PARAMETER OPTIMIZATION:
-                options = new
-                {
-                    num_predict = 512, // Hard limit on response size for speed
-                    temperature = 0.1, // Near-zero creativity for maximum coding accuracy
-                    top_k = 20,        // Focused sampling
-                    top_p = 0.9
-                }
-            };
-
-            var jsonContent = JsonConvert.SerializeObject(payload);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            // 2. Measure Execution Time (Proof of Work)
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             try
             {
-                var response = await _httpClient.PostAsync(_generateEndpoint, content);
+                // Construct the prompt
+                var prompt = $"You are a helpful programming tutor. Explain the following C# code simply and briefly:\n\n```csharp\n{code}\n```";
 
-                stopwatch.Stop();
-                var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-
-                if (!response.IsSuccessStatusCode)
+                var requestBody = new
                 {
-                    // Specific error guidance
-                    return $"Error: Ollama status {response.StatusCode}. \n\n" +
-                           $"MISSING MODEL: Please run this command in terminal: \n" +
-                           $"ollama pull {_modelName}";
+                    model = _modelName,
+                    prompt = prompt,
+                    stream = false // Disable streaming for simpler handling in WinForms
+                };
+
+                var json = JsonConvert.SerializeObject(requestBody);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Try multiple possible generation endpoints used by different Ollama versions.
+                string[] genPaths = new[] {
+                    "/api/generate",
+                    "/v1/generate",
+                    "/api/completions",
+                    "/v1/completions",
+                    "/api/responses",
+                    "/v1/responses"
+                };
+
+                string lastBody = null;
+                foreach (var p in genPaths)
+                {
+                    var url = _endpoint.TrimEnd('/') + p;
+                    try
+                    {
+                        var response = await _httpClient.PostAsync(url, content);
+                        var responseString = await response.Content.ReadAsStringAsync();
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Parse the JSON response and try typical fields
+                            try
+                            {
+                                var jsonResponse = JObject.Parse(responseString);
+                                // Common fields: "response", "text", "result", "choices"
+                                string responseText = jsonResponse["response"]?.ToString()
+                                    ?? jsonResponse["text"]?.ToString()
+                                    ?? jsonResponse["result"]?.ToString();
+
+                                if (string.IsNullOrEmpty(responseText) && jsonResponse["choices"] is JArray choices && choices.Count > 0)
+                                {
+                                    responseText = choices[0]["text"]?.ToString();
+                                }
+
+                                return string.IsNullOrEmpty(responseText) ? "AI returned no content." : responseText;
+                            }
+                            catch
+                            {
+                                return responseString ?? "AI returned no content.";
+                            }
+                        }
+
+                        // Save last body for diagnostics and if 404 try next candidate
+                        lastBody = responseString;
+                        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            continue; // try next possible endpoint
+                        }
+
+                        // Other non-success status: return with diagnostic
+                        return $"Error: Server returned {(int)response.StatusCode} {response.ReasonPhrase}. Response body: {responseString}.";
+                    }
+                    catch (HttpRequestException httpEx)
+                    {
+                        lastBody = httpEx.Message;
+                        // try next endpoint
+                    }
                 }
 
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                var jsonObject = JObject.Parse(jsonResponse);
-
-                string aiText = jsonObject["response"]?.ToString() ?? "No response text found.";
-
-                return $"{aiText}\n\n(Generated locally by {_modelName} in {elapsedSeconds:F1}s)";
+                return $"Could not find a working generation endpoint. Last response/body: {lastBody}";
             }
-            catch (HttpRequestException)
+            catch (HttpRequestException httpEx)
             {
-                return $"Connection Failed: Could not connect to {_baseUrl}. \n" +
-                       "Please ensure 'ollama serve' is running.";
+                return $"Network Error: {httpEx.Message}. Is Ollama running?";
             }
             catch (Exception ex)
             {
-                return $"Unexpected Error: {ex.Message}";
-            }
-        }
-
-        /// <summary>
-        /// Streaming method for instant visual feedback.
-        /// </summary>
-        public async IAsyncEnumerable<string> GetCodeExplanationStreamAsync(string code)
-        {
-            var payload = new
-            {
-                model = _modelName,
-                prompt = $"[INST] You are a C# Expert. Fix bugs and explain this code simply: \n{code} [/INST]",
-                stream = true,
-                options = new
-                {
-                    num_predict = 512,
-                    temperature = 0.1
-                }
-            };
-
-            var request = new HttpRequestMessage(HttpMethod.Post, _generateEndpoint);
-            request.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-
-            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-
-            using var stream = await response.Content.ReadAsStreamAsync();
-            using var reader = new StreamReader(stream);
-
-            while (!reader.EndOfStream)
-            {
-                var line = await reader.ReadLineAsync();
-                if (string.IsNullOrWhiteSpace(line)) continue;
-
-                JObject json;
-                try
-                {
-                    json = JObject.Parse(line);
-                }
-                catch
-                {
-                    continue;
-                }
-
-                var token = json["response"]?.ToString();
-                if (!string.IsNullOrEmpty(token))
-                {
-                    yield return token;
-                }
-
-                if (json["done"]?.Value<bool>() == true)
-                {
-                    yield break;
-                }
+                return $"An error occurred: {ex.Message}";
             }
         }
     }

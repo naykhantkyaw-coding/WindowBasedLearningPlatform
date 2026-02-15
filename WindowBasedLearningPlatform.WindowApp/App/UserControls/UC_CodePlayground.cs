@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Http;
 using WindowBasedLearningPlatform.WindowApp.Services;
 
 namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
@@ -273,10 +274,44 @@ namespace WindowBasedLearningPlatform.WindowApp.App.UserControls
                     return;
                 }
 
+                // -------------------------------------------------------------
+                // FIX: Ensure AI Service is Running (Start if not)
+                // -------------------------------------------------------------
+                // Use EnsureServiceRunningAsync, not EnsureServiceIsRunningAsync
+                await OllamaServiceManager.EnsureServiceRunningAsync();
+                // -------------------------------------------------------------
+
                 bool isRunning = await _aiService.IsRunningAsync();
+
+                // Retry Logic: If not running, give it 2 more seconds to catch up
                 if (!isRunning)
                 {
-                    MessageBox.Show("Could not connect to Ollama.\nPlease ensure 'ollama serve' is running and the endpoint is correct.", "AI Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    await Task.Delay(2000);
+                    isRunning = await _aiService.IsRunningAsync();
+                }
+
+                if (!isRunning)
+                {
+                    // Try a direct health check with more diagnostic details so user can see why it failed
+                    try
+                    {
+                        var config = new ConfigurationService();
+                        string endpoint = config.GetAiEndpoint();
+                        if (string.IsNullOrWhiteSpace(endpoint)) endpoint = "http://localhost:11434";
+                        string healthUrl = endpoint.TrimEnd('/') + "/api/tags";
+
+                        using (var client = new HttpClient())
+                        {
+                            var resp = await client.GetAsync(healthUrl);
+                            string body = await resp.Content.ReadAsStringAsync();
+                            MessageBox.Show($"Could not connect to Ollama API.\nTried: {healthUrl}\nHTTP: {(int)resp.StatusCode} {resp.StatusCode}\nResponse Body:\n{body}", "AI Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Could not connect to Ollama API.\nException: {ex.Message}\nEnsure 'ollama serve' is running and listening on the configured endpoint.", "AI Service Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
                     return;
                 }
 
